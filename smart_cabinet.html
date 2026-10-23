@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-full bg-neutral-950 text-neutral-100 font-sans antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Умный кредитный кабинет | Альфа-Бизнес (ГОСТ Комплаенс)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        alfa: {
+                            red: '#EF3124',
+                            redHover: '#D82317',
+                            dark: '#0D0D0E',
+                            cardBg: '#18181B',
+                            cardLight: '#FFFFFF',
+                            border: '#27272A',
+                            grayText: '#A1A1AA'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '24': '24px',
+                        '32': '32px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars & smooth transitions */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3F3F46;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525B;
+        }
+        
+        /* Custom styled range slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #27272A;
+            border-radius: 9999px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #EF3124;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
+            box-shadow: 0 0 12px rgba(239, 49, 36, 0.5);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            background: #FF4A3D;
+        }
+
+        /* ГОСТ Р 52872: Четкая видимость фокуса клавиатуры */
+        .focus-gost:focus-visible {
+            outline: 3px solid #EF3124 !important;
+            outline-offset: 3px !important;
+        }
+
+        /* Pulse animation for active step */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 49, 36, 0.6); }
+            50% { box-shadow: 0 0 0 12px rgba(239, 49, 36, 0); }
+        }
+        .pulse-step {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="h-full bg-[#0A0A0C] text-neutral-100 flex flex-col justify-between select-none">
+
+    <!-- ГОСТ Р 52872: Ссылка быстрой навигации для скринридеров -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-alfa-red focus:text-white focus:z-50 focus:rounded-xl">
+        Перейти к основному содержимому
+    </a>
+
+    <!-- TOP CONTROL & NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-[#121215]/90 backdrop-blur-md border-b border-neutral-800 px-6 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Logo & Title -->
+            <div class="flex items-center space-x-3 cursor-pointer focus-gost rounded-xl" onclick="navigateTo(1)" tabindex="0" role="button" aria-label="Альфа-Бизнес На главную">
+                <div class="w-9 h-9 bg-alfa-red rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-alfa-red/30" aria-hidden="true">
+                    А
+                </div>
+                <div>
+                    <span class="font-extrabold text-lg tracking-tight text-white block leading-none">Альфа<span class="text-alfa-red">Бизнес</span></span>
+                    <span class="text-[11px] text-neutral-400 font-medium tracking-wide">умный кредитный кабинет</span>
+                </div>
+            </div>
+
+            <!-- Screen Step Nav Buttons -->
+            <nav class="flex items-center bg-neutral-900 p-1.5 rounded-2xl border border-neutral-800 text-xs font-semibold overflow-x-auto max-w-full" aria-label="Навигация по этапам">
+                <button onclick="navigateTo(1)" id="nav-btn-1" class="px-3 py-1.5 rounded-xl transition-all duration-200 bg-alfa-red text-white shadow focus-gost">
+                    Точка входа
+                </button>
+                <button onclick="navigateTo(2)" id="nav-btn-2" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">
+                    Компания
+                </button>
+                <button onclick="navigateTo(3)" id="nav-btn-3" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">
+                    Калькулятор
+                </button>
+                <button onclick="navigateTo(4)" id="nav-btn-4" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">
+                    Скоринг
+                </button>
+                <button onclick="navigateTo(5)" id="nav-btn-5" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">
+                    Результат
+                </button>
+                <div class="h-4 w-[1px] bg-neutral-700 mx-1"></div>
+                <button onclick="navigateTo(6)" id="nav-btn-6" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-300 hover:text-white flex items-center gap-1.5 bg-neutral-800/80 hover:bg-neutral-800 focus-gost">
+                    <i class="fa-solid fa-user-shield text-alfa-red" aria-hidden="true"></i>
+                    <span>Дашборд Менеджера</span>
+                </button>
+            </nav>
+
+            <!-- Status Info -->
+            <div class="hidden xl:flex items-center space-x-3 text-xs text-neutral-400">
+                <div class="flex items-center gap-2 bg-neutral-900/80 px-3 py-1.5 rounded-xl border border-neutral-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>ООО «Ромашка» (ИНН 7701234567)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTENT AREA -->
+    <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
+
+        <!--  ТОЧКА ВХОДА (С Согласием 152-ФЗ / 218-ФЗ) -->
+        <section id="screen-1" class="transition-all duration-300">
+            <div class="max-w-xl mx-auto text-center space-y-8 py-8">
+                <div>
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-alfa-red/10 border border-alfa-red/30 text-alfa-red text-xs font-bold uppercase tracking-widest mb-4">
+                        Экспресс-финансирование
+                    </span>
+                    <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                        Умный кредитный кабинет
+                    </h1>
+                    <p class="text-neutral-400 text-lg mt-3 font-normal">
+                        Подберем решение для вашего бизнеса за 2 минуты без справок и бумажной волокиты.
+                    </p>
+                </div>
+
+                <!-- Main White Card -->
+                <div class="bg-white text-neutral-900 rounded-24 p-8 md:p-10 shadow-2xl text-left border border-neutral-200">
+                    <h2 class="text-xl font-bold text-neutral-900 mb-6 flex items-center justify-between">
+                        <span>Идентификация компании</span>
+                        <i class="fa-solid fa-shield-halved text-alfa-red text-2xl" aria-hidden="true"></i>
+                    </h2>
+
+                    <!-- Option 1: Fast Alfa Business Login -->
+                    <div class="space-y-4">
+                        <button id="btn-alfa-login" onclick="loginWithAlfa()" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-alfa-red/25 transition-all transform active:scale-[0.99] flex items-center justify-center space-x-3 text-base focus-gost">
+                            <i class="fa-solid fa-bolt text-lg" aria-hidden="true"></i>
+                            <span>Войти через Альфа-Бизнес</span>
+                        </button>
+                        
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                            <span class="flex-shrink mx-4 text-xs text-neutral-400 font-semibold uppercase">или по ИНН</span>
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                        </div>
+
+                        <!-- Option 2: INN Search (С валидатором) -->
+                        <div class="space-y-3">
+                            <label for="inn-input" class="text-xs font-bold text-neutral-600 tracking-wider uppercase block">ИНН вашей организации</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="inn-input" value="7701234567" maxlength="12" placeholder="Введите 10 или 12 цифр ИНН" 
+                                    class="flex-1 bg-neutral-100 border border-neutral-300 text-neutral-900 font-medium rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-alfa-red focus:bg-white text-base transition focus-gost"
+                                    aria-describedby="inn-error">
+                                <button id="btn-inn-search" onclick="searchByINN()" class="bg-neutral-900 hover:bg-black text-white font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2 whitespace-nowrap focus-gost">
+                                    <span>Найти</span>
+                                    <i class="fa-solid fa-arrow-right text-xs" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <p id="inn-error" class="text-xs text-alfa-red font-semibold hidden" role="alert"></p>
+                            <p class="text-xs text-neutral-400">
+                                * Тестовый ИНН подтянет данные из ЕГРЮЛ без паролей и СМС
+                            </p>
+                        </div>
+
+                        <!-- ГОСТ Комплаенс: Чекбокс Согласия (152-ФЗ / 218-ФЗ) -->
+                        <div class="pt-4 border-t border-neutral-200">
+                            <label class="flex items-start space-x-3 cursor-pointer">
+                                <input type="checkbox" id="gost-consent" onchange="toggleConsent(this.checked)" checked class="mt-1 w-4 h-4 text-alfa-red rounded border-neutral-300 focus:ring-alfa-red focus-gost">
+                                <span class="text-xs text-neutral-500 leading-relaxed">
+                                    Я даю <a href="#" class="text-alfa-red underline hover:text-black">согласие на обработку персональных данных</a> и запрос кредитной истории в БКИ в соответствии с ФЗ-152 и ФЗ-218.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer trust badges -->
+                <div class="grid grid-cols-3 gap-4 text-center text-xs text-neutral-500 pt-4">
+                    <div class="flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-lock text-neutral-400" aria-hidden="true"></i>
+                        <span>Без паролей и ЭЦП</span>
+                    </div>
+                    <div class="flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-clock text-neutral-400" aria-hidden="true"></i>
+                        <span>Решение за 120 сек</span>
+                    </div>
+                    <div class="flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-database text-neutral-400" aria-hidden="true"></i>
+                        <span>Интеграция ЕГРЮЛ</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПОДТВЕРЖДЕНИЕ КОМПАНИИ -->
+        <section id="screen-2" class="hidden transition-all duration-300">
+            <div class="max-w-2xl mx-auto py-4">
+                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 md:p-10 shadow-2xl space-y-8">
+                    
+                    <div class="flex items-center justify-between pb-6 border-b border-neutral-800">
+                        <div>
+                            <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-bold mb-2" role="status">
+                                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                                <span>Компания найдена в ЕГРЮЛ</span>
+                            </div>
+                            <h2 class="text-2xl font-bold text-white">Проверьте данные организации</h2>
+                        </div>
+                        <div class="w-12 h-12 bg-neutral-800 rounded-2xl flex items-center justify-center text-neutral-300 text-xl font-black">
+                            ЮЛ
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-900/60 p-5 rounded-2xl border border-neutral-800/80 text-sm">
+                        <div>
+                            <span class="text-neutral-500 text-xs block font-medium">Наименование</span>
+                            <span class="text-white font-bold text-base" id="company-name">ООО «Ромашка»</span>
+                        </div>
+                        <div>
+                            <span class="text-neutral-500 text-xs block font-medium">ИНН / КПП</span>
+                            <span class="text-white font-semibold" id="company-inn">7701234567 / 770101001</span>
+                        </div>
+                        <div>
+                            <span class="text-neutral-500 text-xs block font-medium">Основной ОКВЭД</span>
+                            <span class="text-neutral-200 font-medium">46.90 (Торговля оптовая)</span>
+                        </div>
+                        <div>
+                            <span class="text-neutral-500 text-xs block font-medium">Дата регистрации</span>
+                            <span class="text-neutral-200 font-medium">12.03.2019 (5 лет в бизнесе)</span>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between pt-2 border-t border-neutral-800">
+                            <span class="text-neutral-500 text-xs">Статус юридического лица:</span>
+                            <span class="text-emerald-400 text-xs font-bold flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Действующая организация
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="text-sm font-bold text-neutral-300 block" id="goal-label">
+                            Какая у вас основная цель финансирования?
+                        </label>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="goal-tiles" role="radiogroup" aria-labelledby="goal-label">
+                            <button type="button" role="radio" aria-checked="true" onclick="selectGoal(this, 'Кассовый разрыв')" class="goal-tile border-2 border-alfa-red bg-alfa-red/10 text-white rounded-2xl p-4 text-left transition-all hover:border-alfa-red flex flex-col justify-between h-28 space-y-2 focus-gost">
+                                <i class="fa-solid fa-chart-line text-alfa-red text-xl" aria-hidden="true"></i>
+                                <div>
+                                    <span class="font-bold block text-sm">Кассовый разрыв</span>
+                                    <span class="text-[11px] text-neutral-400">Пополнение оборотки</span>
+                                </div>
+                            </button>
+
+                            <button type="button" role="radio" aria-checked="false" onclick="selectGoal(this, 'Покупка оборудования')" class="goal-tile border border-neutral-800 bg-neutral-900/80 hover:bg-neutral-800/80 text-neutral-300 rounded-2xl p-4 text-left transition-all flex flex-col justify-between h-28 space-y-2 focus-gost">
+                                <i class="fa-solid fa-truck-ramp-box text-neutral-400 text-xl" aria-hidden="true"></i>
+                                <div>
+                                    <span class="font-bold block text-sm">Оборудование</span>
+                                    <span class="text-[11px] text-neutral-400">Модернизация</span>
+                                </div>
+                            </button>
+
+                            <button type="button" role="radio" aria-checked="false" onclick="selectGoal(this, 'Развитие бизнеса')" class="goal-tile border border-neutral-800 bg-neutral-900/80 hover:bg-neutral-800/80 text-neutral-300 rounded-2xl p-4 text-left transition-all flex flex-col justify-between h-28 space-y-2 focus-gost">
+                                <i class="fa-solid fa-rocket text-neutral-400 text-xl" aria-hidden="true"></i>
+                                <div>
+                                    <span class="font-bold block text-sm">Развитие бизнеса</span>
+                                    <span class="text-[11px] text-neutral-400">Новые направления</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4">
+                        <button onclick="navigateTo(1)" class="text-xs text-neutral-400 hover:text-white transition flex items-center gap-2 focus-gost rounded-lg p-1">
+                            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Выбрать другую компанию
+                        </button>
+                        <button onclick="navigateTo(3)" class="bg-alfa-red hover:bg-alfa-redHover text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-alfa-red/30 transition flex items-center gap-2 focus-gost">
+                            <span>Продолжить</span>
+                            <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- КАЛЬКУЛЯТОР И СТРЕСС-ТЕСТ -->
+        <section id="screen-3" class="hidden transition-all duration-300">
+            <div class="max-w-5xl mx-auto space-y-6">
+                
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black text-white">Расчет кредитных условий</h2>
+                        <p class="text-neutral-400 text-sm mt-1">Интерактивный калькулятор с встроенным стресс-тестированием</p>
+                    </div>
+                    <div class="inline-flex items-center gap-2 bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-2 text-xs text-neutral-300">
+                        <i class="fa-solid fa-sliders text-alfa-red" aria-hidden="true"></i>
+                        <span>Предварительная ставка: <strong class="text-white">18.5%</strong></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Left Column: Sliders & Main Payment -->
+                    <div class="lg:col-span-7 bg-alfa-cardBg border border-neutral-800 rounded-24 p-6 md:p-8 space-y-8 shadow-xl">
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-baseline">
+                                <label for="amount-slider" class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Сумма финансирования</label>
+                                <span class="text-2xl font-black text-white" id="amount-display">3 000 000 ₽</span>
+                            </div>
+                            <input type="range" id="amount-slider" min="100000" max="5000000" step="100000" value="3000000" oninput="updateCalculator()" class="focus-gost" aria-label="Сумма кредита">
+                            <div class="flex justify-between text-[11px] text-neutral-500 font-semibold">
+                                <span>100 000 ₽</span>
+                                <span>2 500 000 ₽</span>
+                                <span>5 000 000 ₽</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-baseline">
+                                <label for="term-slider" class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Срок кредитования</label>
+                                <span class="text-2xl font-black text-white" id="term-display">24 мес.</span>
+                            </div>
+                            <input type="range" id="term-slider" min="3" max="36" step="1" value="24" oninput="updateCalculator()" class="focus-gost" aria-label="Срок кредита">
+                            <div class="flex justify-between text-[11px] text-neutral-500 font-semibold">
+                                <span>3 мес.</span>
+                                <span>18 мес.</span>
+                                <span>36 мес.</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-neutral-900/90 rounded-2xl p-6 border border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div>
+                                <span class="text-xs text-neutral-400 font-medium block">Ежемесячный платеж</span>
+                                <div class="text-3xl font-black text-white tracking-tight mt-1" id="monthly-payment-display" aria-live="polite">
+                                    150 710 ₽ <span class="text-sm font-normal text-neutral-400">/ мес</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[11px] text-neutral-500 block">Переплата за весь срок</span>
+                                <span class="text-sm font-bold text-neutral-300" id="total-overpay-display">617 040 ₽</span>
+                            </div>
+                        </div>
+
+                        <button onclick="navigateTo(4)" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-alfa-red/25 transition text-base flex items-center justify-center space-x-2 focus-gost">
+                            <span>Отправить заявку в ИИ-скоринг</span>
+                            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <!-- Right Column: Stress Test Card -->
+                    <div class="lg:col-span-5 bg-gradient-to-b from-neutral-900 to-alfa-cardBg border border-neutral-800 rounded-24 p-6 md:p-8 space-y-6 flex flex-col justify-between shadow-xl">
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500">
+                                    <i class="fa-solid fa-heart-pulse text-lg" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">Стресс-тест ставок</h3>
+                                    <p class="text-xs text-neutral-400">Альфа-Индекс финансовой устойчивости</p>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-neutral-300 leading-relaxed">
+                                Оцените нагрузку на бизнес при изменчивости макроэкономических факторов и роста ключевой ставки ЦБ.
+                            </p>
+
+                            <div class="bg-neutral-950 p-4 rounded-2xl border border-neutral-800 flex items-center justify-between">
+                                <label for="stress-toggle" class="text-xs font-semibold text-neutral-200 max-w-[200px] cursor-pointer">
+                                    Показать платеж при росте ключевой ставки на +3%
+                                </label>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="stress-toggle" onchange="updateCalculator()" class="sr-only peer focus-gost">
+                                    <div class="w-11 h-6 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-alfa-red"></div>
+                                </label>
+                            </div>
+
+                            <div id="stress-result-box" class="transition-all duration-300 opacity-50 bg-neutral-900/50 p-5 rounded-2xl border border-neutral-800" aria-live="polite">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs text-neutral-400 font-medium">Стресс-платеж (+3%):</span>
+                                    <span id="stress-badge" class="hidden text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded">
+                                        + Риск нагрузки
+                                    </span>
+                                </div>
+                                <div class="text-2xl font-black text-neutral-400" id="stress-payment-display">
+                                    --- ₽ / мес
+                                </div>
+                                <p class="text-[11px] text-neutral-500 mt-2" id="stress-desc">
+                                    Включите переключатель выше для моделирования наихудшего сценария.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-neutral-800/80 flex items-center space-x-3 text-xs text-neutral-400">
+                            <i class="fa-solid fa-circle-info text-alfa-red text-base" aria-hidden="true"></i>
+                            <span>Ваш запас прочности по оборотам ООО «Ромашка»: <strong class="text-emerald-400">Высокий (1.8x)</strong></span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- СКОРИНГ ТРЕКЕР -->
+        <section id="screen-4" class="hidden transition-all duration-300">
+            <div class="max-w-3xl mx-auto text-center space-y-8 py-8">
+                <div>
+                    <span class="inline-flex items-center space-x-2 bg-alfa-red/10 border border-alfa-red/30 px-3 py-1 rounded-full text-alfa-red text-xs font-bold uppercase tracking-wider mb-3">
+                        <i class="fa-solid fa-microchip animate-spin" aria-hidden="true"></i>
+                        <span>Работает ИИ-Нейросеть Альфа-Бизнес</span>
+                    </span>
+                    <h2 class="text-3xl font-black text-white">Анализируем вашу заявку</h2>
+                    <p class="text-neutral-400 text-sm mt-1">
+                        Система скоринга проверяет 140+ параметров без звонков и запросов документов
+                    </p>
+                </div>
+
+                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-8">
+                    
+                    <div class="grid grid-cols-3 gap-2 relative">
+                        <div class="absolute top-6 left-12 right-12 h-1 bg-neutral-800 -z-0">
+                            <div id="tracker-progress-bar" class="h-full bg-alfa-red transition-all duration-500 w-1/3"></div>
+                        </div>
+
+                        <div id="step-1" class="relative z-10 flex flex-col items-center space-y-2">
+                            <div class="w-12 h-12 rounded-full bg-alfa-red text-white flex items-center justify-center font-bold text-lg shadow-lg pulse-step">
+                                <i class="fa-solid fa-shield-check" aria-hidden="true"></i>
+                            </div>
+                            <span class="text-xs font-bold text-white">Проверка данных</span>
+                            <span class="text-[10px] text-neutral-400">ЕГРЮЛ & БКИ</span>
+                        </div>
+
+                        <div id="step-2" class="relative z-10 flex flex-col items-center space-y-2">
+                            <div class="w-12 h-12 rounded-full bg-neutral-800 text-neutral-500 border border-neutral-700 flex items-center justify-center font-bold text-lg transition-all duration-300">
+                                <i class="fa-solid fa-brain" aria-hidden="true"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-neutral-400">Оценка риска (ИИ)</span>
+                            <span class="text-[10px] text-neutral-500">Анализ оборотов</span>
+                        </div>
+
+                        <div id="step-3" class="relative z-10 flex flex-col items-center space-y-2">
+                            <div class="w-12 h-12 rounded-full bg-neutral-800 text-neutral-500 border border-neutral-700 flex items-center justify-center font-bold text-lg transition-all duration-300">
+                                <i class="fa-solid fa-file-signature" aria-hidden="true"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-neutral-400">Решение</span>
+                            <span class="text-[10px] text-neutral-500">Подбор лимита</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 text-center space-y-3" aria-live="assertive">
+                        <div class="flex items-center justify-center space-x-3 text-alfa-red">
+                            <i class="fa-solid fa-circle-notch fa-spin text-xl" aria-hidden="true"></i>
+                            <span class="font-bold text-base text-white" id="scoring-status-text">
+                                Проверяем кредитную историю в БКИ...
+                            </span>
+                        </div>
+                        <p class="text-xs text-neutral-400" id="scoring-subtext">
+                            Запрос сформирован автоматически. Это займет всего несколько секунд.
+                        </p>
+                    </div>
+
+                    <div class="pt-4 border-t border-neutral-800/80">
+                        <span class="text-[11px] text-neutral-500 block mb-2 font-medium">
+                            ⚙️ Демо-режим: Выберите сценарий решения для быстрого теста:
+                        </span>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            <button onclick="setScenarioAndFinish('A')" class="px-2 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold transition focus-gost">
+                                А: Одобрено
+                            </button>
+                            <button onclick="setScenarioAndFinish('B')" class="px-2 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition focus-gost">
+                                Б: С условием
+                            </button>
+                            <button onclick="setScenarioAndFinish('C')" class="px-2 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-xl text-xs font-bold transition focus-gost">
+                                В: Запрос док.
+                            </button>
+                            <button onclick="setScenarioAndFinish('D')" class="px-2 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold transition focus-gost">
+                                Г: Отказ + ИИ
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- РЕЗУЛЬТАТ (4 СЦЕНАРИЯ) -->
+        <section id="screen-5" class="hidden transition-all duration-300">
+            <div class="max-w-2xl mx-auto py-4 space-y-6">
+                
+                <div class="bg-neutral-900 border border-neutral-800 p-2 rounded-2xl flex items-center justify-between text-xs overflow-x-auto">
+                    <span class="text-neutral-400 px-2 font-medium">Сценарий:</span>
+                    <div class="flex gap-1">
+                        <button onclick="renderScenario('A')" id="btn-scenario-A" class="px-3 py-1.5 rounded-xl font-semibold transition bg-alfa-red text-white focus-gost">А (Одобрено)</button>
+                        <button onclick="renderScenario('B')" id="btn-scenario-B" class="px-3 py-1.5 rounded-xl font-semibold transition text-neutral-400 hover:text-white focus-gost">Б (Условия)</button>
+                        <button onclick="renderScenario('C')" id="btn-scenario-C" class="px-3 py-1.5 rounded-xl font-semibold transition text-neutral-400 hover:text-white focus-gost">В (Документы)</button>
+                        <button onclick="renderScenario('D')" id="btn-scenario-D" class="px-3 py-1.5 rounded-xl font-semibold transition text-neutral-400 hover:text-white focus-gost">Г (Альтернатива)</button>
+                    </div>
+                </div>
+
+                <div id="scenario-card-container" class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-6">
+                    <!-- Будет заполнено скриптом -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ДАШБОРД МЕНЕДЖЕРА -->
+        <section id="screen-6" class="hidden transition-all duration-300">
+            <div class="max-w-6xl mx-auto space-y-6">
+                
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 bg-alfa-red/10 text-alfa-red border border-alfa-red/30 px-3 py-1 rounded-full text-xs font-bold mb-2">
+                            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+                            <span>Интерфейс андеррайтера</span>
+                        </div>
+                        <h2 class="text-3xl font-black text-white">Дашборд Менеджера Банка</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="navigateTo(1)" class="bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 px-4 py-2 rounded-xl text-xs font-semibold text-neutral-300 transition focus-gost">
+                            <i class="fa-solid fa-arrow-left mr-1" aria-hidden="true"></i> На сайт клиента
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Left: Applications Table -->
+                    <div class="lg:col-span-7 bg-alfa-cardBg border border-neutral-800 rounded-24 p-6 shadow-xl space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-white text-base">Активные заявки бизнеса</h3>
+                            <span class="text-xs text-neutral-400">Всего: 12 в обработке</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="text-neutral-500 border-b border-neutral-800">
+                                        <th class="pb-3 font-semibold">Компания</th>
+                                        <th class="pb-3 font-semibold">Сумма</th>
+                                        <th class="pb-3 font-semibold">Риск</th>
+                                        <th class="pb-3 font-semibold text-right">Действие</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-800/60" id="manager-apps-table">
+                                    <tr class="hover:bg-neutral-900/50 cursor-pointer transition bg-neutral-900/30" onclick="selectManagerApp(0)">
+                                        <td class="py-3 font-bold text-white">ООО «Ромашка»</td>
+                                        <td class="py-3 text-neutral-300">3 000 000 ₽</td>
+                                        <td class="py-3"><span class="text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded">Низкий (8%)</span></td>
+                                        <td class="py-3 text-right text-alfa-red font-bold">Выбрать &rarr;</td>
+                                    </tr>
+                                    <tr class="hover:bg-neutral-900/50 cursor-pointer transition" onclick="selectManagerApp(1)">
+                                        <td class="py-3 font-bold text-white">ИП Смирнов А.В.</td>
+                                        <td class="py-3 text-neutral-300">1 500 000 ₽</td>
+                                        <td class="py-3"><span class="text-amber-400 font-semibold bg-amber-500/10 px-2 py-0.5 rounded">Средний (19%)</span></td>
+                                        <td class="py-3 text-right text-neutral-500 font-bold">Выбрать &rarr;</td>
+                                    </tr>
+                                    <tr class="hover:bg-neutral-900/50 cursor-pointer transition" onclick="selectManagerApp(2)">
+                                        <td class="py-3 font-bold text-white">ООО «СтройГрупп»</td>
+                                        <td class="py-3 text-neutral-300">5 000 000 ₽</td>
+                                        <td class="py-3"><span class="text-rose-400 font-semibold bg-rose-500/10 px-2 py-0.5 rounded">Высокий (34%)</span></td>
+                                        <td class="py-3 text-right text-neutral-500 font-bold">Выбрать &rarr;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: AI Summary -->
+                    <div class="lg:col-span-5 bg-neutral-900 border border-neutral-800 rounded-24 p-6 shadow-xl flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start border-b border-neutral-800 pb-4">
+                                <div>
+                                    <span class="text-[11px] text-neutral-500 uppercase tracking-wider block">Детализация заявки</span>
+                                    <h4 class="text-lg font-black text-white mt-1" id="mgr-comp-title">ООО «Ромашка»</h4>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" id="mgr-risk-badge">
+                                    Низкий риск
+                                </span>
+                            </div>
+
+                            <div class="bg-alfa-cardBg p-4 rounded-xl border border-neutral-800 space-y-2">
+                                <div class="flex items-center space-x-2 text-alfa-red text-xs font-bold uppercase tracking-wider">
+                                    <i class="fa-solid fa-brain" aria-hidden="true"></i>
+                                    <span>ИИ-Резюме нейросети</span>
+                                </div>
+                                <p class="text-xs text-neutral-300 leading-relaxed" id="mgr-ai-summary">
+                                    Обороты выросли на 15%. Просрочка 10 дней (устранена). Рекомендация: снизить лимит или выдать под залог оборудования.
+                                </p>
+                            </div>
+
+                            <div class="space-y-2 text-xs text-neutral-400">
+                                <div class="flex justify-between">
+                                    <span>Запрошенная сумма:</span>
+                                    <strong class="text-white" id="mgr-sum">3 000 000 ₽</strong>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Срок кредита:</span>
+                                    <strong class="text-white" id="mgr-term">24 месяца</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 pt-4 border-t border-neutral-800">
+                            <button onclick="managerAction('одобрена')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-xs transition shadow-lg shadow-emerald-600/20 focus-gost">
+                                Одобрить заявку
+                            </button>
+                            <button onclick="managerAction('отклонена')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 px-4 rounded-xl text-xs transition shadow-lg shadow-rose-600/20 focus-gost">
+                                Отклонить
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- МОДАЛЬНОЕ ОКНО: Подписание УКЭП / СМС (63-ФЗ Комплаенс) -->
+    <div id="ds-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="bg-neutral-900 border border-neutral-800 text-white rounded-24 max-w-md w-full p-6 space-y-6 shadow-2xl">
+            <div class="border-b border-neutral-800 pb-3 flex justify-between items-center">
+                <h3 id="modal-title" class="text-lg font-bold">Подписание договора (63-ФЗ)</h3>
+                <button onclick="closeDSModal()" class="text-neutral-400 hover:text-white text-xl focus-gost rounded">&times;</button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-neutral-950 p-4 rounded-xl text-xs text-neutral-300 space-y-1 border border-neutral-800">
+                    <p><strong>Документ:</strong> Кредитное соглашение № ALF-2026-992</p>
+                    <p><strong>Сумма:</strong> 3 000 000 ₽</p>
+                    <p><strong>Заемщик:</strong> ООО «Ромашка»</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label for="sms-code" class="block text-xs font-semibold text-neutral-300">Введите СМС-код подтверждения</label>
+                    <input type="text" id="sms-code" maxlength="6" placeholder="123456" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-4 py-3 text-center text-xl font-mono text-white focus:outline-none focus:border-alfa-red focus-gost">
+                </div>
+
+                <p class="text-[10px] text-neutral-500 leading-tight">
+                    Нажимая кнопку «Подписать», вы используете простую электронную подпись (ПЭП) в соответствии с ФЗ-63 «Об электронной подписи».
+                </p>
+            </div>
+
+            <button onclick="confirmDigitalSignature()" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-3.5 px-6 rounded-xl transition focus-gost">
+                Подписать и получить деньги
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-neutral-900 bg-[#0A0A0C] py-4 px-6 text-center text-xs text-neutral-600">
+        АО «АЛЬФА-БАНК». Генеральная лицензия Банка России № 1326. Соответствие ГОСТ Р 52872, 152-ФЗ и 63-ФЗ.
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-neutral-900 border border-neutral-700 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3" role="status" aria-live="polite">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg" aria-hidden="true"></i>
+        <span id="toast-msg" class="text-xs font-semibold">Действие выполнено</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let currentScreen = 1;
+
+        // ГОСТ Валидатор ИНН (Алгоритм ФНС: 10 или 12 цифр)
+        function validateINN(inn) {
+            inn = inn.toString().trim();
+            if (!/^\d+$/.test(inn)) return false;
+            if (inn.length !== 10 && inn.length !== 12) return false;
+            return true;
+        }
+
+        // ГОСТ 152-ФЗ Согласие
+        function toggleConsent(isChecked) {
+            const btnLogin = document.getElementById('btn-alfa-login');
+            const btnSearch = document.getElementById('btn-inn-search');
+            
+            if (isChecked) {
+                btnLogin.disabled = false;
+                btnSearch.disabled = false;
+                btnLogin.style.opacity = '1';
+                btnSearch.style.opacity = '1';
+            } else {
+                btnLogin.disabled = true;
+                btnSearch.disabled = true;
+                btnLogin.style.opacity = '0.5';
+                btnSearch.style.opacity = '0.5';
+            }
+        }
+
+        function navigateTo(screenNum) {
+            for (let i = 1; i <= 6; i++) {
+                const el = document.getElementById(`screen-${i}`);
+                if (el) el.classList.add('hidden');
+                
+                const btn = document.getElementById(`nav-btn-${i}`);
+                if (btn) {
+                    btn.className = "px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost";
+                }
+            }
+
+            const targetScreen = document.getElementById(`screen-${screenNum}`);
+            if (targetScreen) targetScreen.classList.remove('hidden');
+
+            const targetBtn = document.getElementById(`nav-btn-${screenNum}`);
+            if (targetBtn) {
+                if (screenNum === 6) {
+                    targetBtn.className = "px-3 py-1.5 rounded-xl transition-all duration-200 text-white flex items-center gap-1.5 bg-neutral-800 border border-neutral-700 shadow focus-gost";
+                } else {
+                    targetBtn.className = "px-3 py-1.5 rounded-xl transition-all duration-200 bg-alfa-red text-white shadow focus-gost";
+                }
+            }
+
+            currentScreen = screenNum;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (screenNum === 3) {
+                updateCalculator();
+            } else if (screenNum === 4) {
+                runScoringAnimation();
+            } else if (screenNum === 5) {
+                renderScenario('A');
+            }
+        }
+
+        function loginWithAlfa() {
+            if (!document.getElementById('gost-consent').checked) return;
+            navigateTo(2);
+        }
+
+        function searchByINN() {
+            if (!document.getElementById('gost-consent').checked) return;
+            const inn = document.getElementById('inn-input').value.trim();
+            const errEl = document.getElementById('inn-error');
+
+            if (!validateINN(inn)) {
+                errEl.innerText = 'Введите корректный ИНН (10 цифр ЮЛ или 12 цифр ИП)';
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            errEl.classList.add('hidden');
+            document.getElementById('company-inn').innerText = inn + ' / 770101001';
+            document.getElementById('company-name').innerText = inn.length === 10 ? 'ООО «Ромашка»' : 'ИП ' + inn;
+            navigateTo(2);
+        }
+
+        function selectGoal(tile, goalName) {
+            const tiles = document.querySelectorAll('.goal-tile');
+            tiles.forEach(t => {
+                t.className = "goal-tile border border-neutral-800 bg-neutral-900/80 hover:bg-neutral-800/80 text-neutral-300 rounded-2xl p-4 text-left transition-all flex flex-col justify-between h-28 space-y-2 focus-gost";
+                t.setAttribute('aria-checked', 'false');
+                const icon = t.querySelector('i');
+                if(icon) icon.className = icon.className.replace(' text-alfa-red', ' text-neutral-400');
+            });
+            tile.className = "goal-tile border-2 border-alfa-red bg-alfa-red/10 text-white rounded-2xl p-4 text-left transition-all hover:border-alfa-red flex flex-col justify-between h-28 space-y-2 focus-gost";
+            tile.setAttribute('aria-checked', 'true');
+            const activeIcon = tile.querySelector('i');
+            if(activeIcon) activeIcon.className = activeIcon.className.replace(' text-neutral-400', ' text-alfa-red');
+        }
+
+        function updateCalculator() {
+            const amount = parseInt(document.getElementById('amount-slider').value);
+            const term = parseInt(document.getElementById('term-slider').value);
+            const isStress = document.getElementById('stress-toggle').checked;
+
+            document.getElementById('amount-display').innerText = amount.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('term-display').innerText = term + ' мес.';
+
+            const annualRate = 0.185;
+            const monthlyRate = annualRate / 12;
+            const payment = (amount * monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
+            const totalPay = payment * term;
+            const overpay = totalPay - amount;
+
+            document.getElementById('monthly-payment-display').innerHTML = Math.round(payment).toLocaleString('ru-RU') + ' ₽ <span class="text-sm font-normal text-neutral-400">/ мес</span>';
+            document.getElementById('total-overpay-display').innerText = Math.round(overpay).toLocaleString('ru-RU') + ' ₽';
+
+            const stressAnnualRate = 0.215;
+            const stressMonthlyRate = stressAnnualRate / 12;
+            const stressPayment = (amount * stressMonthlyRate * Math.pow(1 + stressMonthlyRate, term)) / (Math.pow(1 + stressMonthlyRate, term) - 1);
+
+            const stressBox = document.getElementById('stress-result-box');
+            const stressPayDisplay = document.getElementById('stress-payment-display');
+            const stressBadge = document.getElementById('stress-badge');
+            const stressDesc = document.getElementById('stress-desc');
+
+            if (isStress) {
+                stressBox.className = "transition-all duration-300 opacity-100 bg-rose-950/20 p-5 rounded-2xl border border-rose-500/30";
+                stressPayDisplay.innerText = Math.round(stressPayment).toLocaleString('ru-RU') + ' ₽ / мес';
+                stressPayDisplay.className = "text-2xl font-black text-rose-400";
+                stressBadge.classList.remove('hidden');
+                stressDesc.innerText = `Внимание: ежемесячный платеж увеличится на +${Math.round(stressPayment - payment).toLocaleString('ru-RU')} ₽ из-за роста ставки.`;
+            } else {
+                stressBox.className = "transition-all duration-300 opacity-50 bg-neutral-900/50 p-5 rounded-2xl border border-neutral-800";
+                stressPayDisplay.innerText = "--- ₽ / мес";
+                stressPayDisplay.className = "text-2xl font-black text-neutral-400";
+                stressBadge.classList.add('hidden');
+                stressDesc.innerText = "Включите переключатель выше для моделирования наихудшего сценария.";
+            }
+        }
+
+        function runScoringAnimation() {
+            const statusText = document.getElementById('scoring-status-text');
+            const progressBar = document.getElementById('tracker-progress-bar');
+            
+            const step2 = document.getElementById('step-2');
+            const step3 = document.getElementById('step-3');
+
+            progressBar.style.width = "33%";
+            statusText.innerText = "Проверяем кредитную историю в БКИ...";
+
+            setTimeout(() => {
+                progressBar.style.width = "66%";
+                statusText.innerText = "Оценка риска и анализ оборотов (ИИ)...";
+                step2.querySelector('div').className = "w-12 h-12 rounded-full bg-alfa-red text-white flex items-center justify-center font-bold text-lg shadow-lg pulse-step";
+                step2.querySelector('span').className = "text-xs font-bold text-white";
+            }, 1500);
+
+            setTimeout(() => {
+                progressBar.style.width = "100%";
+                statusText.innerText = "Формируем персональное решение...";
+                step3.querySelector('div').className = "w-12 h-12 rounded-full bg-alfa-red text-white flex items-center justify-center font-bold text-lg shadow-lg pulse-step";
+                step3.querySelector('span').className = "text-xs font-bold text-white";
+            }, 3000);
+
+            setTimeout(() => {
+                navigateTo(5);
+            }, 4500);
+        }
+
+        function setScenarioAndFinish(type) {
+            navigateTo(5);
+            renderScenario(type);
+        }
+
+        function renderScenario(type) {
+            ['A', 'B', 'C', 'D'].forEach(t => {
+                const btn = document.getElementById(`btn-scenario-${t}`);
+                if(btn) {
+                    if(t === type) {
+                        btn.className = "px-3 py-1.5 rounded-xl font-semibold transition bg-alfa-red text-white focus-gost";
+                    } else {
+                        btn.className = "px-3 py-1.5 rounded-xl font-semibold transition text-neutral-400 hover:text-white focus-gost";
+                    }
+                }
+            });
+
+            const container = document.getElementById('scenario-card-container');
+
+            if (type === 'A') {
+                container.innerHTML = `
+                    <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider">Сценарий А: Полное одобрение</span>
+                                <h3 class="text-xl font-black text-white">Вам одобрено 3 000 000 ₽</h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-300 leading-relaxed">
+                            Ставка: <strong class="text-white">18% годовых</strong>. Без залогов и поручителей.
+                        </p>
+                    </div>
+                    <button onclick="openDSModal()" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-alfa-red/30 transition text-base flex items-center justify-center space-x-2 focus-gost">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <span>Подписать онлайн (УКЭП / 63-ФЗ)</span>
+                    </button>
+                `;
+            } else if (type === 'B') {
+                container.innerHTML = `
+                    <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Сценарий Б: Одобрено с условиями</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-300 leading-relaxed">
+                            Мы готовы выдать <strong class="text-white">3 000 000 ₽</strong> (вместо 5 млн ₽ из-за долговой нагрузки). Для полной суммы требуется залог оборудования.
+                        </p>
+                    </div>
+                    <button onclick="showToast('Вы согласились с условиями 3 млн ₽', 'emerald')" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-alfa-red/30 transition text-base focus-gost">
+                        Согласен на 3 000 000 ₽
+                    </button>
+                `;
+            } else if (type === 'C') {
+                container.innerHTML = `
+                    <div class="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-blue-400 font-bold uppercase tracking-wider">Сценарий В: Запрос информации</span>
+                                <h3 class="text-xl font-black text-white">Требуется выписка по счету</h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-300 leading-relaxed">
+                            Для подтверждения оборотов за последние 3 месяца прикрепите файл выписки из банка (форматы .pdf, .xml до 15МБ).
+                        </p>
+                    </div>
+                    <input type="file" id="gost-file-input" accept=".pdf,.xml,.txt" class="hidden" onchange="handleFileUpload(this)">
+                    <div class="border-2 border-dashed border-neutral-700 hover:border-alfa-red rounded-2xl p-6 text-center space-y-3 cursor-pointer transition focus-gost" tabindex="0" onclick="document.getElementById('gost-file-input').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-2xl text-alfa-red"></i>
+                        <span class="text-xs text-neutral-300 block font-medium">Нажмите для выбора файла (.PDF, .XML)</span>
+                    </div>
+                `;
+            } else if (type === 'D') {
+                container.innerHTML = `
+                    <div class="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center text-lg font-bold">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-rose-400 font-bold uppercase tracking-wider">Сценарий Г: Отказ и Альтернатива</span>
+                                <h3 class="text-xl font-black text-white">К сожалению, выдать 5 млн ₽ нельзя</h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-neutral-300 leading-relaxed">
+                            <strong class="text-white">Причина ИИ:</strong> высокая текущая долговая нагрузка. 
+                            <br><br>
+                            🤖 <strong>Альтернатива от ИИ:</strong> Кредитная линия на <span class="text-alfa-red font-bold">1 500 000 ₽</span> без залога.
+                        </p>
+                    </div>
+                    <button onclick="showToast('Переход на оформление Кредитной линии', 'emerald')" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-alfa-red/30 transition text-base focus-gost">
+                        Перейти на Кредитную линию (1.5 млн ₽)
+                    </button>
+                `;
+            }
+        }
+
+        // 63-ФЗ ЭЦП Модальное окно
+        function openDSModal() {
+            document.getElementById('ds-modal').classList.remove('hidden');
+        }
+        function closeDSModal() {
+            document.getElementById('ds-modal').classList.add('hidden');
+        }
+        function confirmDigitalSignature() {
+            const code = document.getElementById('sms-code').value.trim();
+            if (code.length < 4) {
+                showToast('Введите корректный СМС-код', 'rose');
+                return;
+            }
+            closeDSModal();
+            showToast('Договор подписан ЭЦП! Средства отправлены.', 'emerald');
+        }
+
+        function handleFileUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 15 * 1024 * 1024) {
+                    showToast('Размер файла превышает 15 МБ', 'rose');
+                    return;
+                }
+                showToast(`Файл "${file.name}" загружен и отправлен в ИИ`, 'emerald');
+                setTimeout(() => renderScenario('A'), 1500);
+            }
+        }
+
+        function selectManagerApp(index) {
+            showToast(`Заявка #${index + 1} выбрана менеджером`, 'emerald');
+        }
+
+        function managerAction(actionText) {
+            showToast(`Заявка ${actionText} менеджером`, 'emerald');
+        }
+
+        function showToast(message, color = 'emerald') {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            const icon = document.getElementById('toast-icon');
+
+            msg.innerText = message;
+            
+            if (color === 'emerald') {
+                icon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-neutral-900 border border-emerald-500/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3";
+            } else if (color === 'rose') {
+                icon.className = "fa-solid fa-circle-xmark text-rose-400 text-lg";
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-neutral-900 border border-rose-500/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3";
+            } else {
+                icon.className = "fa-solid fa-triangle-exclamation text-amber-400 text-lg";
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-neutral-900 border border-amber-500/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3";
+            }
+
+            setTimeout(() => {
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-neutral-900 border border-neutral-700 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3";
+            }, 3000);
+        }
+
+        window.onload = function() {
+            updateCalculator();
+            renderScenario('A');
+        };
+    </script>
+</body>
+</html>
