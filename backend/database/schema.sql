@@ -46,13 +46,7 @@ create table if not exists Clients(
 
 create table if not exists Companies(
 	id serial primary key,
-	inn varchar(12) not null unique check(inn ~ '\d{10}$' or inn ~ '\d{12}$'),
-	name varchar (500) not null,
-	okved varchar (10) not null check(okved ~ '\d{2}(\.\d{1,2}){0,2}'),
-	form form_type not null default 'IP', 
-	address varchar(150) not null,
-	registration_date date not null check (registration_date <= current_date),
-	status company_status not null default 'active'
+	inn varchar(12) not null unique check(inn ~ '\d{10}$' or inn ~ '\d{12}$')
 );
 
 create table if not exists Applications(
@@ -65,7 +59,7 @@ create table if not exists Applications(
 	term_unit term_unit_type not null default 'days',
 	aim varchar (300) not null,
 	status application_status not null default 'draft',
-	created timestamp not null,
+	created timestamp not null default now(),
 	updated timestamp default now()
 );
 
@@ -80,10 +74,10 @@ create table if not exists ScoringResults(
 
 create table if not exists ExternalData(
 	id serial primary key,
-	company_id int not null references Companies(id),
+	inn VARCHAR(12) not null,
 	bki_data JSONB,
 	fns_data JSONB,
-	fetched_at timestamp
+	fetched_at timestamp default now()
 );
 
 create table if not exists AILogs(
