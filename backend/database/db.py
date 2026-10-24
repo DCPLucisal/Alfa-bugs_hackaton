@@ -5,13 +5,13 @@ from psycopg2 import pool
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent.parent.parent / ".env")
 
 _pool = None
 
 def init_pool():
     global _pool
-    if _pool in None:
+    if _pool is None:
         _pool = pool.ThreadedConnectionPool(
             minconn= 1,
             maxconn= 10,

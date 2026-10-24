@@ -16,7 +16,7 @@ class ClientOut(BaseModel):
 class CompanyData(BaseModel):
     bki_data: dict
     fns_data: dict
-    fetched_at: datetime
+    fetched_at: datetime | None = None
 
 
 class ApplicationsInformationDesc(BaseModel):
@@ -26,7 +26,7 @@ class ApplicationsInformationDesc(BaseModel):
     phone_number : str
     email : EmailStr
     inn: str
-    applcation_type: str
+    type: str
     amount: int
     term_value: int
     term_unit: str
@@ -43,6 +43,7 @@ class ApplicationInformation(BaseModel):
     phone_number: str
     inn: str    
     application_id: int
+    type: str
     amount: int 
     term_value: int 
     term_unit: str 
@@ -50,20 +51,21 @@ class ApplicationInformation(BaseModel):
     status: str 
     created: datetime 
     updated: datetime
+    manager_comment: str | None = None
     bki_data: dict
     fns_data: dict
     fetched_at: datetime
-    final_score: int
-    risk_category: str            
-    factors: dict
-    recommendation: str
+    final_score: int | None = None
+    risk_category: str | None = None
+    factors: dict 
+    recommendation: str | None = None
 
 class AILogs(BaseModel):
     application_id: int
     source: str
     prompt: dict
-    ai_anwer_text: str
-    ai_answer_parsed: dict | None = None
+    ai_answer_text: str
+    ai_answer_parsed: dict 
     data: datetime
 
 class createApplication(BaseModel):
@@ -87,20 +89,28 @@ class createAILog(BaseModel):
     application_id: int
     source: str = Field(default="user")
     prompt: dict
-    ai_answer_text = str
-    ai_answer_parsed = str | None = None
+    ai_answer_text : str
+    ai_answer_parsed : dict
 
 class updateApplication(BaseModel):
-    status: str | None = Field(default="draft")
-    amount: int | None = Field(ge=0)
-    term_value: int | None = Field(ge=0)
-    term_unit: str | None = Field(default="days")
-    aim: str | None = Field(min_length=1)
+    status: str | None = None
+    amount: int | None = Field(default=None, ge=0)
+    term_value: int | None = Field(default=None, ge=0)
+    term_unit: str | None = None
+    aim: str | None = Field(default=None, min_length=1)
+    manager_comment: str | None = None
 
 class updateScoringResults(BaseModel):
-    final_score: int | None = Field(ge=0)
-    risk_category : str | None = Field(default="middle")
-    factors : str | None
-    recommendation: str | None
+    final_score: int | None = Field(ge=0, default=None)
+    risk_category : str | None = None
+    factors : str | None =  None
+    recommendation: str | None = None
 
+class getScoring(BaseModel):
+    application_id: int
+    term_value: int
+    term_unit: str
+    amount: int
+    fns_data: dict
+    bki_data: dict
 

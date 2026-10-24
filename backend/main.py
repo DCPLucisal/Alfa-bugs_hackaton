@@ -2,8 +2,10 @@
 from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from backend.database import db, requests
-import schemas
-
+import backend.schemas as schemas
+from backend.services import ai
+from backend.services.calculate_score import calculate_score
+from backend.services.cache import pre_scoring_cache
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,7 +32,7 @@ def get_client_by_id(id: int):
         return client
 
 @app.get("/get_company_data/{inn}", response_model=schemas.CompanyData)
-def get_company_data(inn: int):
+def get_company_data(inn: str):
     company = requests.get_company_data(inn)
     if company is None:
         raise HTTPException(403, "Компания не найдена")
@@ -57,20 +59,88 @@ def get_application_by_id(id:int):
 def get_ailogs():
     return requests.get_ailogs()
 
-@app.post("/create_application/")
+@app.get("/get_ailog_by_id/{application_id}/{source}", response_model=list[schemas.AILogs])
+def get_ailogs(application_id:int, source:str = "user"):
+    return requests.get_ailog_by_application_id(application_id, source)
+
+@app.post("/create_application")
 def create_application(data: schemas.createApplication):
     result = requests.create_application(**data.model_dump())
     return {"id": result["id"]}
 
-@app.post("/create_scoringresult")
-def create_scoringresult(data: schemas.createScoringResult):
-    result = requests.create_scoringresult(**data.model_dump())
-    return {"id": result["id"]}
+@app.post("/create_pre_scoring")
+def create_pre_scoring(application_id: int):
+    company_data = requests.get_scoring_data_by_application_id(application_id)
+    if company_data is None:
+        raise HTTPException(404, "Данные о компании не были найдены")
+    pre_scoring_data = calculate_score(**company_data)
+    pre_scoring_cache.set(application_id, pre_scoring_data)
+    return pre_scoring_data
 
-@app.post("/create_ailog")
-def create_ailog(data: schemas.createAILog):
-    result = requests.create_ailog(**data.model_dump())
-    return {"id": result["id"]}
+@app.post("/create_scoring_result")
+def create_scoring_result(application_id: int):
+    if pre_scoring_cache.get(application_id) is not None:
+        query = requests.create_scoringresult(application_id, **pre_scoring_cache.get(application_id))
+        if query is None:
+            raise HTTPException(404, "Ошибка в добавлении в scoring_result")
+        pre_scoring_cache.delete_cache(application_id)
+        return {"id" : query["id"]}
+    company_data = requests.get_scoring_data_by_application_id(application_id)
+    if company_data is None:
+        raise HTTPException(404, "Данные о компании не были найдены")
+    scoring_data = calculate_score(**company_data)
+    return requests.create_scoringresult(application_id, **scoring_data)
+
+@app.post("/create_prescoring_ai")
+def create_prescoring_ai(application_id: int):
+    scoring_result = None
+    company_data = None
+    if pre_scoring_cache.get(application_id) is not None:
+        scoring_result = pre_scoring_cache.get(application_id)
+    else:
+        scoring_data = requests.get_scoring_data_by_application_id(application_id)
+        if scoring_data is None:
+            raise HTTPException(403, "Не удалось получить данные скоринга")
+        scoring_result = calculate_score(**scoring_data)
+    company_data = requests.get_company_data_by_application_id(application_id)
+    if company_data is None:
+        raise HTTPException(403, "Не удалось получить данные о компании")
+    ai_result = ai.ai_pre_scoring(scoring_result, company_data)
+    result = requests.create_ailog(application_id, "user", **ai_result)
+    return {"id": result["id"], "ai_answer_text" : ai_result["ai_answer_text"]}
+
+@app.post("/create_manager_summary_ai")
+def create_manager_summary_ai(application_id: int):
+    scoring_result = None
+    company_data = None
+    scoring_result = requests.get_scoring_result_by_application_id(application_id)
+    if scoring_result is None:
+        raise HTTPException(403, "Не удалось получить данные скоринга")
+    company_data = requests.get_company_data_by_application_id(application_id)
+    if company_data is None:
+        raise HTTPException(403, "Не удалось получить данные о компании")
+    ai_result = ai.ai_manager_summary(scoring_result, company_data)
+    result = requests.create_ailog(application_id, "manager", **ai_result)
+    return {"id": result["id"], "ai_answer_text" : ai_result["ai_answer_text"]}
+
+@app.post("/create_client_result_ai")
+def create_client_result_ai(application_id: int):
+    scoring_result = None
+    company_data = None
+    scoring_result = requests.get_scoring_result_by_application_id(application_id)
+    if scoring_result is None:
+        raise HTTPException(403, "Не удалось получить данные скоринга")
+    company_data = requests.get_company_data_by_application_id(application_id)
+    if company_data is None:
+        raise HTTPException(403, "Не удалось получить данные о компании")
+    manager_comment = requests.get_application_by_id(application_id)["manager_comment"]
+    if manager_comment is None:
+        ai_result = ai.ai_client_result(scoring_result, company_data)    
+    else:
+        ai_result = ai.ai_client_result(scoring_result, company_data,manager_comment)   
+    result = requests.create_ailog(application_id, "user", **ai_result)
+    return {"id": result["id"], "ai_answer_text" : ai_result["ai_answer_text"]}
+
 
 @app.patch("/update_application/{id}")
 def update_application(id: int, data: schemas.updateApplication):
@@ -79,13 +149,22 @@ def update_application(id: int, data: schemas.updateApplication):
         raise HTTPException(400, "Нечего обновлять")
     requests.update_application(id, **fields)
 
-@app.patch("/update_scoringresult/{id}")
-def update_scoringresult(id: int, data: schemas.updateScoringResults):
-    fields = data.model_dump(exclude_unset=True)  
-    if not fields:
-        raise HTTPException(400, "Нечего обновлять")
-    requests.update_scoringresult(id, **fields)
-
+@app.patch("/update_scoringresult/{application_id}")
+def update_scoringresult(application_id: int):
+    if pre_scoring_cache.get(application_id) is not None:
+        query = requests.update_scoringresult_by_application_id(application_id, **pre_scoring_cache.get(application_id))
+        if query is None:
+            raise HTTPException(404, "Ошибка в добавлении в scoring_result")
+        pre_scoring_cache.delete_cache(application_id)
+        return {"id" : query["id"]}
+    company_data = requests.get_scoring_data_by_application_id(application_id)
+    if company_data is None:
+        raise HTTPException(404, "Данные о компании не были найдены")
+    scoring_data = calculate_score(**company_data)
+    result = requests.update_scoringresult_by_application_id(application_id, **scoring_data)
+    if result is None:
+        raise HTTPException(404, "Скоринг не найден для этой заявки")
+    return result
 
 @app.delete("/delete_application/{application_id}")
 def delete_application(application_id: int):

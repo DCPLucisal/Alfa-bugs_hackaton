@@ -46,7 +46,8 @@ create table if not exists Clients(
 
 create table if not exists Companies(
 	id serial primary key,
-	inn varchar(12) not null unique check(inn ~ '\d{10}$' or inn ~ '\d{12}$')
+	inn varchar(12) not null unique check(inn ~ '\d{10}$' or inn ~ '\d{12}$'),
+	client_id int references Clients(id)
 );
 
 create table if not exists Applications(
@@ -60,7 +61,8 @@ create table if not exists Applications(
 	aim varchar (300) not null,
 	status application_status not null default 'draft',
 	created timestamp not null default now(),
-	updated timestamp default now()
+	updated timestamp default now(),
+	manager_comment text
 );
 
 create table if not exists ScoringResults(
@@ -86,13 +88,13 @@ create table if not exists AILogs(
 	source request_type not null default 'user',
 	prompt JSONB not null,
 	ai_answer_text text not null,
-	ai_anser_parsed JSONB,
+	ai_answer_parsed JSONB,
 	data timestamp
 );
 
 create index if not exists idx_applications_client on Applications(client_id);
 create index if not exists idx_applications_company on Applications(company_id);
 create index if not exists idx_scoring_application on ScoringResults(application_id);
-create index if not exists idx_external_company on ExternalData(company_id);
+create index if not exists idx_external_company on ExternalData(inn);
 create index if not exists idx_ailogs_application on AILogs(application_id);
 
