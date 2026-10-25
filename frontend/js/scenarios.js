@@ -53,18 +53,38 @@ async function checkStatusAndRender() {
             `;
         }
         else if (status === 'approved_with_conditions') {
+            const conditionsText = app.manager_comment || 'Менеджер предложил изменить условия. Свяжитесь с ним для уточнения.';
+            
             container.innerHTML = `
                 <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 space-y-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
                         <div>
                             <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Одобрено с условиями</span>
-                            <h3 class="text-xl font-black text-white">Одобрено ${amount.toLocaleString('ru-RU')} ₽</h3>
+                            <h3 class="text-xl font-black text-white">Требуется согласование новых условий</h3>
                         </div>
                     </div>
-                    <p class="text-sm text-neutral-300 leading-relaxed">${finalAiText}</p>
+
+                    <!-- Условия менеджера -->
+                    <div class="bg-neutral-900/50 p-4 rounded-xl border border-amber-500/20 text-sm text-neutral-300 leading-relaxed">
+                        <p class="font-bold text-amber-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check"></i> Предложение менеджера:
+                        </p>
+                        <p>${conditionsText}</p>
+                    </div>
+
+                    <!-- Резюме от ИИ -->
+                    <p class="text-xs text-neutral-400 italic border-t border-amber-500/10 pt-3">
+                        <i class="fa-solid fa-robot mr-1"></i> ИИ-ассистент: ${finalAiText}
+                    </p>
                 </div>
-                <button onclick="openDSModal()" class="w-full bg-alfa-red hover:bg-alfa-redHover text-white font-bold py-4 rounded-2xl shadow-lg transition"><i class="fa-solid fa-file-signature mr-2"></i> Согласен и подписать</button>
+
+                <!-- Одна кнопка на всю ширину -->
+                <button onclick="acceptConditions()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-4 rounded-2xl shadow-lg transition">
+                    <i class="fa-solid fa-check mr-2"></i> Согласен с условиями
+                </button>
             `;
         }
         else if (status === 'rejected_with_alternative' || status === 'rejected') {
@@ -82,6 +102,27 @@ async function checkStatusAndRender() {
                         ${finalAiText}
                     </div>
                 </div>
+            `;
+        }
+        else if (status === 'info_requests') {
+            container.innerHTML = `
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-folder-open"></i></div>
+                        <div>
+                            <span class="text-xs text-blue-400 font-bold uppercase tracking-wider">Требуются документы</span>
+                            <h3 class="text-xl font-black text-white">Запрос дополнительной информации</h3>
+                        </div>
+                    </div>
+                    <div class="bg-neutral-900/50 p-4 rounded-xl border border-blue-500/20 text-sm text-neutral-300 leading-relaxed">
+                        <p class="font-bold text-blue-400 mb-1"><i class="fa-solid fa-robot mr-1"></i> Комментарий менеджера:</p>
+                        ${finalAiText}
+                    </div>
+                    <p class="text-xs text-neutral-500">Пожалуйста, загрузите запрошенные документы в личном кабинете.</p>
+                </div>
+                <button onclick="showToast('Переход к загрузке документов (демо)', 'emerald')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg transition">
+                    <i class="fa-solid fa-upload mr-2"></i> Загрузить документы
+                </button>
             `;
         }
     } catch (err) {

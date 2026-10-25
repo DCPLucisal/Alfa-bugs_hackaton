@@ -73,6 +73,8 @@ async function selectManagerApp(appId) {
 
             <div class="grid grid-cols-2 gap-3 pt-4 border-t border-neutral-800 mt-4">
                 <button onclick="managerAction('approved')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs">Одобрить</button>
+                <button onclick="managerAction('approved_with_conditions')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl text-xs">С условиями</button>
+                <button onclick="managerAction('info_requests')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs">Запросить док.</button>
                 <button onclick="managerAction('rejected_with_alternative')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs">Отклонить</button>
             </div>
         `;
