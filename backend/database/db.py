@@ -23,6 +23,7 @@ def init_pool():
         )
 
 def close():
+    global _pool
     if _pool is not None:
         _pool.closeall()
         _pool = None

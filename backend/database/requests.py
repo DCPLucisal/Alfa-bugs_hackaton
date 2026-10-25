@@ -24,13 +24,30 @@ def get_client_by_id(id: int):
             """, (id,))
             row = cur.fetchone()
             return row
+        
+def get_companies_by_client_id(id:int):
+    with db.get_conn() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+            SELECT c.id, co.inn 
+            FROM clients c
+            JOIN companies co on co.client_id = c.id
+            WHERE c.id = %s
+            """, (id,))
+            row = cur.fetchall()
+            return row if row else []
 
 def get_company_data(inn: str):
     with db.get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-            SELECT e.bki_data, e.fns_data, e.fetched_at
+            SELECT 
+                c.id AS company_id, 
+                e.bki_data, 
+                e.fns_data, 
+                e.fetched_at
             FROM externaldata e
+            LEFT JOIN companies c ON c.inn = e.inn
             WHERE e.inn = %s
             ORDER BY e.fetched_at DESC
             LIMIT 1
@@ -65,7 +82,7 @@ def get_applications_for_analysis():
     with db.get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-            SELECT a.id,cl.name, cl.lastname, cl.middlename, cl.phone_number,cl.email,
+            SELECT a.id AS application_id,cl.name, cl.lastname, cl.middlename, cl.phone_number,cl.email,
                    co.inn, a.type,a.amount, a.term_value, 
                    a.term_unit, a.aim, a.status, a.created, a.updated,
                    sr.risk_category
@@ -73,7 +90,7 @@ def get_applications_for_analysis():
             JOIN clients cl on cl.id = a.client_id
             JOIN companies co on co.id = a.company_id
             JOIN scoringresults sr on sr.application_id = a.id
-            WHERE a.status <> 'draft'
+            WHERE a.status IN ('validating', 'scoring')
             """)
             row = cur.fetchall()
             return row

@@ -6,6 +6,9 @@ import backend.schemas as schemas
 from backend.services import ai
 from backend.services.calculate_score import calculate_score
 from backend.services.cache import pre_scoring_cache
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -14,6 +17,14 @@ async def lifespan(app: FastAPI):
     db.close()
 
 app = FastAPI(title="Alfa Hackaton API", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],          
+    allow_credentials=True,
+    allow_methods=["*"],          
+    allow_headers=["*"],        
+)
 
 @app.post("/login", response_model=schemas.ClientOut)
 def LogIn(data: schemas.LogIn):
@@ -30,6 +41,13 @@ def get_client_by_id(id: int):
         raise HTTPException(403, "Пользователь не найден")
     else:
         return client
+    
+@app.get("/get_companies_by_client_id/{id}")
+def get_companies_by_client_id(id:int):
+    companies = requests.get_companies_by_client_id(id)
+    if companies == []:
+        raise HTTPException(402, "Компании не найдены")
+    return companies
 
 @app.get("/get_company_data/{inn}", response_model=schemas.CompanyData)
 def get_company_data(inn: str):

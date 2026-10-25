@@ -14,12 +14,14 @@ class ClientOut(BaseModel):
     email : EmailStr
 
 class CompanyData(BaseModel):
+    company_id: int
     bki_data: dict
     fns_data: dict
     fetched_at: datetime | None = None
 
 
 class ApplicationsInformationDesc(BaseModel):
+    application_id: int
     name : str
     lastname : str
     middlename : str | None = None
@@ -54,10 +56,10 @@ class ApplicationInformation(BaseModel):
     manager_comment: str | None = None
     bki_data: dict
     fns_data: dict
-    fetched_at: datetime
+    fetched_at: datetime | None = None
     final_score: int | None = None
     risk_category: str | None = None
-    factors: dict 
+    factors: dict | list | None = None
     recommendation: str | None = None
 
 class AILogs(BaseModel):

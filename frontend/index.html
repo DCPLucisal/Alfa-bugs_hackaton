@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-full bg-neutral-950 text-neutral-100 font-sans antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Умный кредитный кабинет | Альфа-Бизнес</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="h-full bg-[#0A0A0C] text-neutral-100 flex flex-col justify-between select-none">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-alfa-red focus:text-white focus:z-50 focus:rounded-xl">Перейти к содержимому</a>
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#121215]/90 backdrop-blur-md border-b border-neutral-800 px-6 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3 cursor-pointer focus-gost rounded-xl" onclick="navigateTo(1)">
+                <div class="w-9 h-9 bg-alfa-red rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-alfa-red/30">А</div>
+                <div>
+                    <span class="font-extrabold text-lg tracking-tight text-white block leading-none">Альфа<span class="text-alfa-red">Бизнес</span></span>
+                    <span class="text-[11px] text-neutral-400 font-medium tracking-wide">умный кредитный кабинет</span>
+                </div>
+            </div>
+            <nav class="flex items-center bg-neutral-900 p-1.5 rounded-2xl border border-neutral-800 text-xs font-semibold overflow-x-auto">
+                <button onclick="navigateTo(1)" id="nav-btn-1" class="px-3 py-1.5 rounded-xl transition-all duration-200 bg-alfa-red text-white shadow focus-gost">Точка входа</button>
+                <button onclick="navigateTo(2)" id="nav-btn-2" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Компания</button>
+                <button onclick="navigateTo(3)" id="nav-btn-3" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Калькулятор</button>
+                <button onclick="navigateTo(4)" id="nav-btn-4" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Скоринг</button>
+                <button onclick="navigateTo(5)" id="nav-btn-5" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Результат</button>
+                <div class="h-4 w-[1px] bg-neutral-700 mx-1"></div>
+                <button onclick="navigateTo(6)" id="nav-btn-6" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-300 hover:text-white flex items-center gap-1.5 bg-neutral-800/80 hover:bg-neutral-800 focus-gost">
+                    <i class="fa-solid fa-user-shield text-alfa-red"></i> Дашборд Менеджера
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
+
+        <!-- SCREEN 1 -->
+        <section id="screen-1" class="transition-all duration-300">
+            <div class="max-w-xl mx-auto text-center space-y-8 py-8">
+                <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">Умный кредитный кабинет</h1>
+                <div class="bg-white text-neutral-900 rounded-24 p-8 md:p-10 shadow-2xl text-left border border-neutral-200">
+                    <h2 class="text-xl font-bold mb-6 flex justify-between">Идентификация <i class="fa-solid fa-shield-halved text-alfa-red"></i></h2>
+                    <div class="space-y-4">
+                        <button onclick="loginWithAlfa()" class="w-full bg-alfa-red text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-alfa-redHover transition"><i class="fa-solid fa-bolt mr-2"></i> Войти через Альфа-Бизнес</button>
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                            <span class="mx-4 text-xs text-neutral-400 font-semibold uppercase">или по ИНН</span>
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="inn-input" value="7701234567" maxlength="12" class="flex-1 bg-neutral-100 border rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-alfa-red">
+                            <button onclick="searchByINN()" class="bg-neutral-900 text-white px-6 py-3.5 rounded-xl hover:bg-black transition">Найти <i class="fa-solid fa-arrow-right text-xs ml-1"></i></button>
+                        </div>
+                        <p id="inn-error" class="text-xs text-alfa-red font-semibold hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 2 -->
+        <section id="screen-2" class="hidden transition-all duration-300">
+            <div class="max-w-2xl mx-auto py-4">
+                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-8">
+                    <div class="flex justify-between pb-6 border-b border-neutral-800">
+                        <div>
+                            <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-bold mb-2"><i class="fa-solid fa-check"></i> Компания найдена</div>
+                            <h2 class="text-2xl font-bold">Данные организации</h2>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-900/60 p-5 rounded-2xl border border-neutral-800 text-sm">
+                        <div><span class="text-neutral-500 text-xs block">Наименование</span><span class="text-white font-bold" id="company-name">-</span></div>
+                        <div><span class="text-neutral-500 text-xs block">ИНН / КПП</span><span class="text-white font-semibold" id="company-inn">-</span></div>
+                        <div><span class="text-neutral-500 text-xs block">ОКВЭД</span><span class="text-neutral-200" id="company-okved">-</span></div>
+                        <div><span class="text-neutral-500 text-xs block">Дата рег.</span><span class="text-neutral-200" id="company-date">-</span></div>
+                    </div>
+                    <div class="space-y-4">
+                        <label class="text-sm font-bold text-neutral-300 block">Цель финансирования?</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="goal-tiles">
+                            <button onclick="selectGoal(this, 'Кассовый разрыв')" class="goal-tile border-2 border-alfa-red bg-alfa-red/10 text-white rounded-2xl p-4 text-left h-28"><i class="fa-solid fa-chart-line text-alfa-red text-xl mb-2"></i><span class="font-bold block text-sm">Кассовый разрыв</span></button>
+                            <button onclick="selectGoal(this, 'Покупка оборудования')" class="goal-tile border border-neutral-800 bg-neutral-900/80 text-neutral-300 rounded-2xl p-4 text-left h-28"><i class="fa-solid fa-truck-ramp-box text-neutral-400 text-xl mb-2"></i><span class="font-bold block text-sm">Оборудование</span></button>
+                            <button onclick="selectGoal(this, 'Развитие бизнеса')" class="goal-tile border border-neutral-800 bg-neutral-900/80 text-neutral-300 rounded-2xl p-4 text-left h-28"><i class="fa-solid fa-rocket text-neutral-400 text-xl mb-2"></i><span class="font-bold block text-sm">Развитие</span></button>
+                        </div>
+                    </div>
+                    <div class="flex justify-end pt-4">
+                        <button onclick="goToCalculator()" class="bg-alfa-red text-white font-bold px-8 py-3.5 rounded-xl hover:bg-alfa-redHover">Продолжить <i class="fa-solid fa-chevron-right text-xs ml-1"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 3 -->
+        <section id="screen-3" class="hidden transition-all duration-300">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <h2 class="text-3xl font-black text-white">Расчет кредитных условий</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-6 md:p-8 space-y-8">
+                        <div>
+                            <div class="flex justify-between"><label class="text-xs font-bold text-neutral-400">Сумма</label><span class="text-xl font-black" id="amount-display">3 000 000 ₽</span></div>
+                            <input type="range" id="amount-slider" min="100000" max="5000000" step="100000" value="3000000" oninput="updateCalculator()" class="w-full mt-2">
+                        </div>
+                        <div>
+                            <div class="flex justify-between"><label class="text-xs font-bold text-neutral-400">Срок</label><span class="text-xl font-black" id="term-display">24 мес.</span></div>
+                            <input type="range" id="term-slider" min="3" max="36" step="1" value="24" oninput="updateCalculator()" class="w-full mt-2">
+                        </div>
+                        <div class="bg-neutral-900 rounded-2xl p-6 border border-neutral-800 flex justify-between items-center">
+                            <div><span class="text-xs text-neutral-400 block">Ежемесячный платеж</span><div class="text-2xl font-black text-white" id="monthly-payment-display">150 710 ₽</div></div>
+                            <div class="text-right"><span class="text-xs text-neutral-400 block">Переплата</span><span class="text-sm font-bold text-neutral-300" id="total-overpay-display">617 040 ₽</span></div>
+                        </div>
+                        <button onclick="submitToScoring()" class="w-full bg-alfa-red text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-alfa-redHover transition">Отправить заявку в ИИ-скоринг <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                    </div>
+                    <div class="bg-neutral-900 border border-neutral-800 rounded-24 p-6 md:p-8 flex flex-col justify-center">
+                        <h3 class="font-bold text-white text-lg mb-4"><i class="fa-solid fa-heart-pulse text-amber-500 mr-2"></i> Стресс-тест</h3>
+                        <label class="flex items-center justify-between bg-neutral-950 p-4 rounded-xl border border-neutral-800 cursor-pointer">
+                            <span class="text-xs text-neutral-300">Показать платеж при +3%</span>
+                            <input type="checkbox" id="stress-toggle" onchange="updateCalculator()" class="w-4 h-4">
+                        </label>
+                        <div id="stress-result-box" class="mt-4 opacity-50 bg-neutral-900/50 p-5 rounded-xl border border-neutral-800">
+                            <span class="text-xs text-neutral-400 block">Стресс-платеж (+3%):</span>
+                            <div class="text-xl font-black text-neutral-400" id="stress-payment-display">--- ₽ / мес</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 4 -->
+        <section id="screen-4" class="hidden transition-all duration-300">
+            <div class="max-w-3xl mx-auto text-center space-y-8 py-8">
+                <h2 class="text-3xl font-black text-white">Анализ вашей заявки</h2>
+                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-6">
+                    <div id="loading-spinner" class="flex items-center justify-center space-x-3 text-alfa-red py-8">
+                        <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
+                        <span class="font-bold text-white">ИИ анализирует данные...</span>
+                    </div>
+                    <div id="ai-result-text" class="hidden text-sm text-neutral-300 leading-relaxed text-left"></div>
+                    <button id="btn-send-manager" onclick="sendToManager()" class="hidden w-full bg-alfa-red text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-alfa-redHover transition">
+                        Отправить заявку менеджеру <i class="fa-solid fa-paper-plane ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 5 -->
+        <section id="screen-5" class="hidden transition-all duration-300">
+            <div class="max-w-2xl mx-auto py-4 space-y-6">
+                <div id="result-container" class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-6"></div>
+                <div class="text-center">
+                    <button onclick="checkStatusAndRender()" class="text-xs text-neutral-400 hover:text-white underline"><i class="fa-solid fa-rotate-right mr-1"></i> Обновить статус</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 6 -->
+                <!-- SCREEN 6 -->
+        <section id="screen-6" class="hidden transition-all duration-300">
+            <div class="max-w-6xl mx-auto space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-black text-white">Дашборд Менеджера Банка</h2>
+                    <button onclick="loadManagerDashboard()" class="text-xs text-neutral-400 hover:text-white underline"><i class="fa-solid fa-rotate-right mr-1"></i> Обновить</button>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Левая часть: Таблица -->
+                    <div class="lg:col-span-7 bg-alfa-cardBg border border-neutral-800 rounded-24 p-6 shadow-xl space-y-4">
+                        <h3 class="font-bold text-white text-base">Активные заявки</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="text-neutral-500 border-b border-neutral-800">
+                                        <th class="pb-3">Компания</th>
+                                        <th class="pb-3">Сумма</th>
+                                        <th class="pb-3">Статус</th>
+                                        <th class="pb-3 text-right">Действие</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manager-apps-table" class="divide-y divide-neutral-800/60">
+                                    <tr><td colspan="4" class="py-4 text-center text-neutral-500">Загрузка...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-neutral-900 border border-neutral-800 rounded-24 p-6 shadow-xl flex flex-col justify-between space-y-6">
+                        <div id="manager-details-panel" class="space-y-4">
+                            <div class="text-center py-10 text-neutral-500 text-sm">
+                                Выберите заявку из списка слева, чтобы увидеть детали
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL & TOAST -->
+    <div id="ds-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-24 max-w-md w-full p-6 space-y-6">
+            <h3 class="text-lg font-bold">Подписание (63-ФЗ)</h3>
+            <input type="text" id="sms-code" placeholder="123456" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-4 py-3 text-center text-white">
+            <button onclick="confirmDigitalSignature()" class="w-full bg-alfa-red text-white font-bold py-3.5 rounded-xl">Подписать и получить деньги</button>
+        </div>
+    </div>
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-neutral-900 border border-neutral-700 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg" class="text-xs font-semibold"></span>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/tailwind-config.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/scenarios.js"></script>
+    <script src="js/manager.js"></script>
+</body>
+</html>
