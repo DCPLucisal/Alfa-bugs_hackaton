@@ -1,5 +1,6 @@
 window.appState = {
     clientId: 1,
+    clientName: null,
     currentStep: 1,
     activeCompanyInn: null,
     companies: [],
@@ -9,6 +10,7 @@ window.appState = {
     currentTerm: 24,
     aiExplanation: null,
     scoringResult: null
+    
 };
 
 function saveState() {
@@ -41,8 +43,7 @@ function addCompany(inn, data) {
     const newCompany = {
         inn: inn,
         company_id: data.company_id,
-        data: { bki: data.bki_data, fns: data.fns_data },
-        applications: []
+        data: { bki: data.bki_data, fns: data.fns_data }
     };
     window.appState.companies.push(newCompany);
     saveState();

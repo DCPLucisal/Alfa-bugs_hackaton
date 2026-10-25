@@ -3,9 +3,20 @@ async function submitToScoring() {
         showToast("Выберите компанию и цель", 'rose'); return;
     }
     const activeCompany = getActiveCompany();
+    if (!activeCompany) {
+        showToast("Ошибка: компания не найдена в базе", 'rose'); return;
+    }
 
     try {
-        if (!window.appState.currentApplicationId) {
+        // Если заявка уже есть, обновляем её
+        if (window.appState.currentApplicationId) {
+            await apiUpdateApplication(window.appState.currentApplicationId, {
+                amount: window.appState.currentAmount,
+                term_value: window.appState.currentTerm,
+                aim: window.appState.currentGoal
+            });
+        } else {
+            // Если нет — создаем новую
             const app = await apiCreateApplication({
                 client_id: window.appState.clientId,
                 company_id: activeCompany.company_id || 1, 
@@ -17,12 +28,19 @@ async function submitToScoring() {
                 status: 'draft',
             });
             window.appState.currentApplicationId = app.id;
-            addApplication(window.appState.activeCompanyInn, app.id);
             saveState();
         }
-        unlockStep(4); updateNavButtons(); navigateTo(4);
-        await runScoringAnimation();
-    } catch (err) { showToast(`Ошибка: ${err.message}`, 'rose'); }
+        
+        // Переходим на 6-й экран (Скоринг)
+        unlockStep(6); 
+        updateNavButtons(); 
+        navigateTo(6);
+        
+        // Запускаем анимацию и запросы
+        await runScoringAnimation(); 
+    } catch (err) { 
+        showToast(`Ошибка при создании заявки: ${err.message}`, 'rose'); 
+    }
 }
 
 async function runScoringAnimation() {
@@ -31,12 +49,30 @@ async function runScoringAnimation() {
     const btnSend = document.getElementById('btn-send-manager');
     const appId = window.appState.currentApplicationId;
 
+    spinner.classList.remove('hidden');
+    spinner.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-2xl"></i> <span class="font-bold text-white">ИИ анализирует данные...</span>`;
+    textContainer.classList.add('hidden');
+    textContainer.innerHTML = '';
+    btnSend.classList.add('hidden');
+
+    if (!appId) {
+        spinner.innerHTML = `<span class="text-rose-400">Ошибка: ID заявки не найден</span>`;
+        return;
+    }
+
     try {
         const scoring = await apiPreScoring(appId);
-        await apiCreateScoringResult(appId);
+        window.appState.scoringResult = scoring;
+
+        try {
+            await apiUpdateScoringResult(appId);
+        } catch (err) {
+            console.log("Записи скоринга нет (404), создаем новую...");
+            await apiCreateScoringResult(appId);
+        }
+
         const aiResult = await apiPreScoringAI(appId);
         
-        window.appState.scoringResult = scoring;
         window.appState.aiExplanation = aiResult.ai_answer_text;
         saveState();
 
@@ -47,13 +83,16 @@ async function runScoringAnimation() {
                 <i class="fa-solid fa-robot text-alfa-red text-xl mt-1"></i>
                 <div>
                     <p class="font-bold text-white mb-1">Совет от ИИ-ассистента:</p>
-                    <p>${window.appState.aiExplanation}</p>
+                    <p class="text-sm text-neutral-300 leading-relaxed">${window.appState.aiExplanation}</p>
                 </div>
             </div>
         `;
+        
         btnSend.classList.remove('hidden'); 
+
     } catch (err) {
         spinner.innerHTML = `<span class="text-rose-400">Ошибка ИИ: ${err.message}</span>`;
+        console.error("Ошибка в runScoringAnimation:", err);
     }
 }
 
@@ -61,9 +100,9 @@ async function sendToManager() {
     const appId = window.appState.currentApplicationId;
     try {
         await apiUpdateApplication(appId, { status: "validating" });
-        unlockStep(5);
+        unlockStep(7);
         updateNavButtons();
-        navigateTo(5); 
+        navigateTo(7); 
     } catch (err) {
         showToast(`Ошибка: ${err.message}`, 'rose');
     }

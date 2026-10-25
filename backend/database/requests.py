@@ -29,7 +29,7 @@ def get_companies_by_client_id(id:int):
     with db.get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-            SELECT c.id, co.inn 
+            SELECT co.id as company_id, co.inn 
             FROM clients c
             JOIN companies co on co.client_id = c.id
             WHERE c.id = %s
@@ -99,7 +99,7 @@ def get_users_applications(client_id: int):
     with db.get_conn() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute("""
-            SELECT a.id,cl.name, cl.lastname, cl.middlename, cl.phone_number,cl.email,
+            SELECT a.id as application_id,cl.name, cl.lastname, cl.middlename, cl.phone_number,cl.email,
                    co.inn, a.type,a.amount, a.term_value, 
                    a.term_unit, a.aim, a.status, a.created, a.updated,
                    a.manager_comment,sr.risk_category

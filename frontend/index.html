@@ -4,108 +4,235 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Умный кредитный кабинет | Альфа-Бизнес</title>
+    
+    <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Свои стили -->
     <link rel="stylesheet" href="css/styles.css">
+
     <script src="js/tailwind-config.js"></script>
 </head>
 <body class="h-full bg-[#0A0A0C] text-neutral-100 flex flex-col justify-between select-none">
 
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-alfa-red focus:text-white focus:z-50 focus:rounded-xl">Перейти к содержимому</a>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-alfa-red focus:text-white focus:z-50 focus:rounded-xl">
+        Перейти к основному содержимому
+    </a>
 
-    <!-- HEADER -->
+    <!-- ============================================
+         TOP CONTROL & NAVIGATION BAR
+         ============================================ -->
     <header class="sticky top-0 z-50 bg-[#121215]/90 backdrop-blur-md border-b border-neutral-800 px-6 py-3">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-3 cursor-pointer focus-gost rounded-xl" onclick="navigateTo(1)">
-                <div class="w-9 h-9 bg-alfa-red rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-alfa-red/30">А</div>
+            
+            <!-- Logo & Title -->
+            <div class="flex items-center space-x-3 cursor-pointer focus-gost rounded-xl" onclick="navigateTo(1)" tabindex="0" role="button">
+                <div class="w-9 h-9 bg-alfa-red rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-alfa-red/30">
+                    А
+                </div>
                 <div>
                     <span class="font-extrabold text-lg tracking-tight text-white block leading-none">Альфа<span class="text-alfa-red">Бизнес</span></span>
                     <span class="text-[11px] text-neutral-400 font-medium tracking-wide">умный кредитный кабинет</span>
                 </div>
             </div>
-            <nav class="flex items-center bg-neutral-900 p-1.5 rounded-2xl border border-neutral-800 text-xs font-semibold overflow-x-auto">
-                <button onclick="navigateTo(1)" id="nav-btn-1" class="px-3 py-1.5 rounded-xl transition-all duration-200 bg-alfa-red text-white shadow focus-gost">Точка входа</button>
-                <button onclick="navigateTo(2)" id="nav-btn-2" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Компания</button>
-                <button onclick="navigateTo(3)" id="nav-btn-3" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Калькулятор</button>
-                <button onclick="navigateTo(4)" id="nav-btn-4" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Скоринг</button>
-                <button onclick="navigateTo(5)" id="nav-btn-5" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Результат</button>
+
+            <!-- Screen Step Nav Buttons (1 to 8) -->
+            <nav class="flex items-center bg-neutral-900 p-1.5 rounded-2xl border border-neutral-800 text-xs font-semibold overflow-x-auto max-w-full">
+                <button onclick="navigateTo(1)" id="nav-btn-1" class="px-3 py-1.5 rounded-xl transition-all duration-200 bg-alfa-red text-white shadow focus-gost">Вход</button>
+                <button onclick="navigateTo(2)" id="nav-btn-2" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Кабинет</button>
+                <button onclick="navigateTo(3)" id="nav-btn-3" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Компания</button>
+                <button onclick="navigateTo(4)" id="nav-btn-4" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Цель</button>
+                <button onclick="navigateTo(5)" id="nav-btn-5" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Калькулятор</button>
+                <button onclick="navigateTo(6)" id="nav-btn-6" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Скоринг</button>
+                <button onclick="navigateTo(7)" id="nav-btn-7" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-400 hover:text-white focus-gost">Результат</button>
                 <div class="h-4 w-[1px] bg-neutral-700 mx-1"></div>
-                <button onclick="navigateTo(6)" id="nav-btn-6" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-300 hover:text-white flex items-center gap-1.5 bg-neutral-800/80 hover:bg-neutral-800 focus-gost">
-                    <i class="fa-solid fa-user-shield text-alfa-red"></i> Дашборд Менеджера
+                <button onclick="navigateTo(8)" id="nav-btn-8" class="px-3 py-1.5 rounded-xl transition-all duration-200 text-neutral-300 hover:text-white flex items-center gap-1.5 bg-neutral-800/80 hover:bg-neutral-800 focus-gost">
+                    <i class="fa-solid fa-user-shield text-alfa-red"></i> Менеджер
                 </button>
             </nav>
+
+            <!-- Status Info -->
+            <div class="hidden xl:flex items-center space-x-3 text-xs text-neutral-400">
+                <div class="flex items-center gap-2 bg-neutral-900/80 px-3 py-1.5 rounded-xl border border-neutral-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="header-company-name">Не выбран клиент</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- MAIN -->
+    <!-- ============================================
+         MAIN APP CONTENT AREA
+         ============================================ -->
     <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
 
-        <!-- SCREEN 1 -->
+        <!-- ============================================
+             SCREEN 1: АВТОРИЗАЦИЯ
+             ============================================ -->
         <section id="screen-1" class="transition-all duration-300">
+            <div class="max-w-md mx-auto text-center space-y-8 py-12">
+                <div class="w-20 h-20 bg-alfa-red rounded-3xl flex items-center justify-center font-black text-white text-4xl mx-auto shadow-lg shadow-alfa-red/30">А</div>
+                <div>
+                    <h1 class="text-3xl font-black text-white">Вход в Альфа-Бизнес</h1>
+                    <p class="text-neutral-400 mt-2 text-sm">Выберите аккаунт для демонстрации</p>
+                </div>
+                
+                <div class="space-y-3 text-left">
+                    <button onclick="selectUser(1)" class="w-full bg-white text-neutral-900 p-4 rounded-xl hover:bg-neutral-100 transition flex items-center justify-between shadow-lg">
+                        <div><p class="font-bold">Иван Иванов</p><p class="text-xs text-neutral-500">ID: 1 (База данных)</p></div>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <button onclick="selectUser(2)" class="w-full bg-neutral-900 border border-neutral-800 text-white p-4 rounded-xl hover:bg-neutral-800 transition flex items-center justify-between">
+                        <div><p class="font-bold">Петр Петров</p><p class="text-xs text-neutral-500">ID: 2 (База данных)</p></div>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <button onclick="selectUser(3)" class="w-full bg-neutral-900 border border-neutral-800 text-white p-4 rounded-xl hover:bg-neutral-800 transition flex items-center justify-between">
+                        <div><p class="font-bold">Анна Смирнова</p><p class="text-xs text-neutral-500">ID: 3 (База данных)</p></div>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SCREEN 2: ЛИЧНЫЙ КАБИНЕТ КЛИЕНТА
+             ============================================ -->
+        <section id="screen-2" class="hidden transition-all duration-300">
+            <div class="max-w-3xl mx-auto py-4 space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black text-white" id="client-greeting">Личный кабинет</h2>
+                        <p class="text-sm text-neutral-400">Управление вашими заявками</p>
+                    </div>
+                    <button onclick="startNewApplication()" class="bg-alfa-red text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-alfa-red/30 hover:bg-alfa-redHover transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Создать заявку
+                    </button>
+                </div>
+                
+                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-6 md:p-8 shadow-xl space-y-4">
+                    <h3 class="font-bold text-white text-lg border-b border-neutral-800 pb-4">История заявок</h3>
+                    <div id="client-apps-list" class="space-y-3">
+                        <p class="text-neutral-500 text-sm text-center py-8">Загрузка...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SCREEN 3: ВЫБОР КОМПАНИИ (ИДЕНТИФИКАЦИЯ)
+             ============================================ -->
+        <section id="screen-3" class="hidden transition-all duration-300">
             <div class="max-w-xl mx-auto text-center space-y-8 py-8">
-                <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">Умный кредитный кабинет</h1>
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">Идентификация компании</h1>
+                    <p class="text-neutral-400 text-sm mt-2">Выберите компанию из списка или введите ИНН</p>
+                </div>
+
                 <div class="bg-white text-neutral-900 rounded-24 p-8 md:p-10 shadow-2xl text-left border border-neutral-200">
-                    <h2 class="text-xl font-bold mb-6 flex justify-between">Идентификация <i class="fa-solid fa-shield-halved text-alfa-red"></i></h2>
-                    <div class="space-y-4">
-                        <button onclick="loginWithAlfa()" class="w-full bg-alfa-red text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-alfa-redHover transition"><i class="fa-solid fa-bolt mr-2"></i> Войти через Альфа-Бизнес</button>
+                    <div class="space-y-6">
+                        <div class="space-y-3">
+                            <label for="inn-select" class="text-xs font-bold text-neutral-600 tracking-wider uppercase block">Мои компании</label>
+                            <select id="inn-select" onchange="document.getElementById('inn-input').value = this.value" class="w-full bg-neutral-100 border border-neutral-300 text-neutral-900 font-medium rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-alfa-red">
+                                <option value="">-- Выбрать из списка --</option>
+                                <!-- Заполняется через JS -->
+                            </select>
+                        </div>
+
                         <div class="relative flex py-2 items-center">
                             <div class="flex-grow border-t border-neutral-200"></div>
-                            <span class="mx-4 text-xs text-neutral-400 font-semibold uppercase">или по ИНН</span>
+                            <span class="flex-shrink mx-4 text-xs text-neutral-400 font-semibold uppercase">или по ИНН</span>
                             <div class="flex-grow border-t border-neutral-200"></div>
                         </div>
-                        <div class="flex gap-2">
-                            <input type="text" id="inn-input" value="7701234567" maxlength="12" class="flex-1 bg-neutral-100 border rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-alfa-red">
-                            <button onclick="searchByINN()" class="bg-neutral-900 text-white px-6 py-3.5 rounded-xl hover:bg-black transition">Найти <i class="fa-solid fa-arrow-right text-xs ml-1"></i></button>
+
+                        <div class="space-y-3">
+                            <label for="inn-input" class="text-xs font-bold text-neutral-600 tracking-wider uppercase block">ИНН организации</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="inn-input" value="" maxlength="12" placeholder="10 или 12 цифр" 
+                                    class="flex-1 bg-neutral-100 border border-neutral-300 text-neutral-900 font-medium rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-alfa-red">
+                                <button onclick="searchByINN()" class="bg-neutral-900 hover:bg-black text-white font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2">
+                                    <span>Найти</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+                            <p id="inn-error" class="text-xs text-alfa-red font-semibold hidden"></p>
                         </div>
-                        <p id="inn-error" class="text-xs text-alfa-red font-semibold hidden"></p>
+
+                        <div class="pt-4 border-t border-neutral-200">
+                            <label class="flex items-start space-x-3 cursor-pointer">
+                                <input type="checkbox" id="gost-consent" checked class="mt-1 w-4 h-4 text-alfa-red rounded border-neutral-300">
+                                <span class="text-xs text-neutral-500 leading-relaxed">
+                                    Я даю <a href="#" class="text-alfa-red underline">согласие на обработку персональных данных</a> и запрос кредитной истории в БКИ.
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SCREEN 2 -->
-        <section id="screen-2" class="hidden transition-all duration-300">
+        <!-- ============================================
+             SCREEN 4: ДАННЫЕ КОМПАНИИ И ВЫБОР ЦЕЛИ
+             ============================================ -->
+        <section id="screen-4" class="hidden transition-all duration-300">
             <div class="max-w-2xl mx-auto py-4">
-                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-8">
-                    <div class="flex justify-between pb-6 border-b border-neutral-800">
+                <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 md:p-10 shadow-2xl space-y-8">
+                    <div class="flex items-center justify-between pb-6 border-b border-neutral-800">
                         <div>
-                            <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-bold mb-2"><i class="fa-solid fa-check"></i> Компания найдена</div>
-                            <h2 class="text-2xl font-bold">Данные организации</h2>
+                            <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-bold mb-2">
+                                <i class="fa-solid fa-circle-check"></i> <span>Компания найдена</span>
+                            </div>
+                            <h2 class="text-2xl font-bold text-white">Проверьте данные</h2>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-900/60 p-5 rounded-2xl border border-neutral-800 text-sm">
-                        <div><span class="text-neutral-500 text-xs block">Наименование</span><span class="text-white font-bold" id="company-name">-</span></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-neutral-900/60 p-5 rounded-2xl border border-neutral-800/80 text-sm">
+                        <div><span class="text-neutral-500 text-xs block">Наименование</span><span class="text-white font-bold text-base" id="company-name">-</span></div>
                         <div><span class="text-neutral-500 text-xs block">ИНН / КПП</span><span class="text-white font-semibold" id="company-inn">-</span></div>
-                        <div><span class="text-neutral-500 text-xs block">ОКВЭД</span><span class="text-neutral-200" id="company-okved">-</span></div>
-                        <div><span class="text-neutral-500 text-xs block">Дата рег.</span><span class="text-neutral-200" id="company-date">-</span></div>
+                        <div><span class="text-neutral-500 text-xs block">Основной ОКВЭД</span><span class="text-neutral-200 font-medium" id="company-okved">-</span></div>
+                        <div><span class="text-neutral-500 text-xs block">Дата регистрации</span><span class="text-neutral-200 font-medium" id="company-date">-</span></div>
                     </div>
+
                     <div class="space-y-4">
-                        <label class="text-sm font-bold text-neutral-300 block">Цель финансирования?</label>
+                        <label class="text-sm font-bold text-neutral-300 block">Какая у вас цель финансирования?</label>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="goal-tiles">
-                            <button onclick="selectGoal(this, 'Кассовый разрыв')" class="goal-tile border-2 border-alfa-red bg-alfa-red/10 text-white rounded-2xl p-4 text-left h-28"><i class="fa-solid fa-chart-line text-alfa-red text-xl mb-2"></i><span class="font-bold block text-sm">Кассовый разрыв</span></button>
-                            <button onclick="selectGoal(this, 'Покупка оборудования')" class="goal-tile border border-neutral-800 bg-neutral-900/80 text-neutral-300 rounded-2xl p-4 text-left h-28"><i class="fa-solid fa-truck-ramp-box text-neutral-400 text-xl mb-2"></i><span class="font-bold block text-sm">Оборудование</span></button>
-                            <button onclick="selectGoal(this, 'Развитие бизнеса')" class="goal-tile border border-neutral-800 bg-neutral-900/80 text-neutral-300 rounded-2xl p-4 text-left h-28"><i class="fa-solid fa-rocket text-neutral-400 text-xl mb-2"></i><span class="font-bold block text-sm">Развитие</span></button>
+                            <button onclick="selectGoal(this, 'Кассовый разрыв')" class="goal-tile border-2 border-alfa-red bg-alfa-red/10 text-white rounded-2xl p-4 text-left h-28">
+                                <i class="fa-solid fa-chart-line text-alfa-red text-xl mb-2"></i><span class="font-bold block text-sm">Кассовый разрыв</span>
+                            </button>
+                            <button onclick="selectGoal(this, 'Покупка оборудования')" class="goal-tile border border-neutral-800 bg-neutral-900/80 text-neutral-300 rounded-2xl p-4 text-left h-28">
+                                <i class="fa-solid fa-truck-ramp-box text-neutral-400 text-xl mb-2"></i><span class="font-bold block text-sm">Оборудование</span>
+                            </button>
+                            <button onclick="selectGoal(this, 'Развитие бизнеса')" class="goal-tile border border-neutral-800 bg-neutral-900/80 text-neutral-300 rounded-2xl p-4 text-left h-28">
+                                <i class="fa-solid fa-rocket text-neutral-400 text-xl mb-2"></i><span class="font-bold block text-sm">Развитие</span>
+                            </button>
                         </div>
                     </div>
-                    <div class="flex justify-end pt-4">
-                        <button onclick="goToCalculator()" class="bg-alfa-red text-white font-bold px-8 py-3.5 rounded-xl hover:bg-alfa-redHover">Продолжить <i class="fa-solid fa-chevron-right text-xs ml-1"></i></button>
+
+                    <div class="flex justify-between items-center pt-4">
+                        <button onclick="navigateTo(3)" class="text-xs text-neutral-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Назад</button>
+                        <button onclick="goToCalculator()" class="bg-alfa-red text-white font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-alfa-redHover transition flex items-center gap-2">Продолжить <i class="fa-solid fa-chevron-right text-xs"></i></button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SCREEN 3 -->
-        <section id="screen-3" class="hidden transition-all duration-300">
+        <!-- ============================================
+             SCREEN 5: КАЛЬКУЛЯТОР
+             ============================================ -->
+        <section id="screen-5" class="hidden transition-all duration-300">
             <div class="max-w-4xl mx-auto space-y-6">
                 <h2 class="text-3xl font-black text-white">Расчет кредитных условий</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-6 md:p-8 space-y-8">
                         <div>
                             <div class="flex justify-between"><label class="text-xs font-bold text-neutral-400">Сумма</label><span class="text-xl font-black" id="amount-display">3 000 000 ₽</span></div>
-                            <input type="range" id="amount-slider" min="100000" max="5000000" step="100000" value="3000000" oninput="updateCalculator()" class="w-full mt-2">
+                            <input type="range" id="amount-slider" min="100000" max="15000000" step="100000" value="3000000" oninput="updateCalculator()" class="w-full mt-2">
                         </div>
                         <div>
                             <div class="flex justify-between"><label class="text-xs font-bold text-neutral-400">Срок</label><span class="text-xl font-black" id="term-display">24 мес.</span></div>
@@ -132,8 +259,10 @@
             </div>
         </section>
 
-        <!-- SCREEN 4 -->
-        <section id="screen-4" class="hidden transition-all duration-300">
+        <!-- ============================================
+             SCREEN 6: СКОРИНГ
+             ============================================ -->
+        <section id="screen-6" class="hidden transition-all duration-300">
             <div class="max-w-3xl mx-auto text-center space-y-8 py-8">
                 <h2 class="text-3xl font-black text-white">Анализ вашей заявки</h2>
                 <div class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-6">
@@ -149,8 +278,10 @@
             </div>
         </section>
 
-        <!-- SCREEN 5 -->
-        <section id="screen-5" class="hidden transition-all duration-300">
+        <!-- ============================================
+             SCREEN 7: РЕЗУЛЬТАТ
+             ============================================ -->
+        <section id="screen-7" class="hidden transition-all duration-300">
             <div class="max-w-2xl mx-auto py-4 space-y-6">
                 <div id="result-container" class="bg-alfa-cardBg border border-neutral-800 rounded-24 p-8 shadow-2xl space-y-6"></div>
                 <div class="text-center">
@@ -159,9 +290,10 @@
             </div>
         </section>
 
-        <!-- SCREEN 6 -->
-                <!-- SCREEN 6 -->
-        <section id="screen-6" class="hidden transition-all duration-300">
+        <!-- ============================================
+             SCREEN 8: ДАШБОРД МЕНЕДЖЕРА
+             ============================================ -->
+        <section id="screen-8" class="hidden transition-all duration-300">
             <div class="max-w-6xl mx-auto space-y-6">
                 <div class="flex justify-between items-center">
                     <h2 class="text-3xl font-black text-white">Дашборд Менеджера Банка</h2>
@@ -189,6 +321,7 @@
                         </div>
                     </div>
 
+                    <!-- Правая часть: Детали и ИИ -->
                     <div class="lg:col-span-5 bg-neutral-900 border border-neutral-800 rounded-24 p-6 shadow-xl flex flex-col justify-between space-y-6">
                         <div id="manager-details-panel" class="space-y-4">
                             <div class="text-center py-10 text-neutral-500 text-sm">
@@ -201,14 +334,27 @@
         </section>
     </main>
 
-    <!-- MODAL & TOAST -->
-    <div id="ds-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-24 max-w-md w-full p-6 space-y-6">
-            <h3 class="text-lg font-bold">Подписание (63-ФЗ)</h3>
-            <input type="text" id="sms-code" placeholder="123456" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-4 py-3 text-center text-white">
-            <button onclick="confirmDigitalSignature()" class="w-full bg-alfa-red text-white font-bold py-3.5 rounded-xl">Подписать и получить деньги</button>
+    <!-- ============================================
+         МОДАЛЬНОЕ ОКНО: Подписание УКЭП / СМС
+         ============================================ -->
+    <div id="ds-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 text-white rounded-24 max-w-md w-full p-6 space-y-6 shadow-2xl">
+            <div class="border-b border-neutral-800 pb-3 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Подписание договора</h3>
+                <button onclick="closeDSModal()" class="text-neutral-400 hover:text-white text-xl">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="sms-code" maxlength="6" placeholder="123456" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-4 py-3 text-center text-xl text-white focus:outline-none focus:border-alfa-red">
+                <button onclick="confirmDigitalSignature()" class="w-full bg-alfa-red text-white font-bold py-3.5 rounded-xl hover:bg-alfa-redHover transition">Подписать и получить деньги</button>
+            </div>
         </div>
     </div>
+
+    <footer class="border-t border-neutral-900 bg-[#0A0A0C] py-4 px-6 text-center text-xs text-neutral-600">
+        АО «АЛЬФА-БАНК». Генеральная лицензия Банка России № 1326.
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-neutral-900 border border-neutral-700 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3">
         <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg" class="text-xs font-semibold"></span>
     </div>
@@ -223,5 +369,6 @@
     <script src="js/scoring.js"></script>
     <script src="js/scenarios.js"></script>
     <script src="js/manager.js"></script>
+
 </body>
 </html>
