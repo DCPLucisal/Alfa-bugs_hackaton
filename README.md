@@ -22,31 +22,41 @@ Ollama (запущенная локально на порту 11434 с моде�
 
 Вариант 1: Через Docker (Рекомендуется)
 
+Мы подготовили скрипты для автоматического запуска всех компонентов (включая Ollama).
+Для Mac / Linux:
+Откройте терминал в корне проекта и выполните:
+chmod +x start.sh
+./start.sh
+Для Windows:
+Дважды кликните на файл start.bat (или запустите его через командную строку).
+Что делает скрипт автоматически:
+Проверяет, установлена ли Ollama. Если нет — открывает страницу скачивания (Windows) или устанавливает её (Mac).
+Запускает Ollama в фоне (если она ещё не запущена).
+Проверяет наличие модели qwen3.5:4b и скачивает её при необходимости.
+Запускает Docker (PostgreSQL + FastAPI).
+После успешного запуска бэкенд будет доступен по адресу: http://localhost:8000/docs
+
+Вариант 2: Ручной запуск через Docker (Если скрипт не сработал)
+
+Если по каким-то причинам автоматический скрипт не работает, выполните шаги вручную:
 Убедитесь, что Docker Desktop запущен.
-
-Убедитесь, что Ollama запущена (в терминале: ollama serve).
-
-В корне проекта выполните команду: docker-compose up --build
-
-Дождитесь, пока в логах появится Application startup complete.
-
+Скачайте и установите Ollama (если её нет) с официального сайта: https://ollama.com/download
+Запустите Ollama в отдельном терминале: ollama serve
+В корне проекта выполните: docker-compose up --build
+Дождитесь появления в логах строки Application startup complete.
 Бэкенд доступен по адресу: http://localhost:8000/docs
 
-Вариант 2: Локально (Без Docker)
+Вариант 3: Локально (Без Docker)
 
 Создайте и активируйте виртуальное окружение: python -m venv .venv
-
 Активируйте его: source .venv/bin/activate (для Mac/Linux)
-
 Установите зависимости: pip install -r requirements.lock
-
 Создайте БД alfa_data в PostgreSQL и примените миграции:
 psql -U postgres -d alfa_data -f backend/database/schema.sql
 psql -U postgres -d alfa_data -f seed.sql
-
 Запустите сервер: uvicorn backend.main:app --reload
-
 Запустите фронтенд через Live Server (в VS Code) или откройте index.html в браузере.
+Не забудьте, что для работы ИИ должна быть запущена Ollama (ollama serve).
 
 Конфигурации и переменные окружения
 Все настройки вынесены в файл docker-compose.yml (для Docker) или .env (для локального запуска).
